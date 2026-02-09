@@ -1,9 +1,23 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from "@angular/common";
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  forwardRef,
+} from "@angular/core";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 @Component({
-  selector: 'app-input-field',
+  selector: "app-input-field",
   imports: [CommonModule],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => InputFieldComponent),
+      multi: true,
+    },
+  ],
   template: `
     <div class="relative">
       <input
@@ -18,28 +32,30 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
         [disabled]="disabled"
         [ngClass]="inputClasses"
         (input)="onInput($event)"
+        (blur)="onBlur()"
       />
 
       @if (hint) {
-      <p class="mt-1.5 text-xs"
-        [ngClass]="{
-          'text-error-500': error,
-          'text-success-500': success,
-          'text-gray-500': !error && !success
-        }">
-        {{ hint }}
-      </p>
+        <p
+          class="mt-1.5 text-xs"
+          [ngClass]="{
+            'text-error-500': error,
+            'text-success-500': success,
+            'text-gray-500': !error && !success,
+          }"
+        >
+          {{ hint }}
+        </p>
       }
     </div>
   `,
 })
-export class InputFieldComponent {
-
-  @Input() type: string = 'text';
-  @Input() id?: string = '';
-  @Input() name?: string = '';
-  @Input() placeholder?: string = '';
-  @Input() value: string | number = '';
+export class InputFieldComponent implements ControlValueAccessor {
+  @Input() type: string = "text";
+  @Input() id?: string = "";
+  @Input() name?: string = "";
+  @Input() placeholder?: string = "";
+  @Input() value: string | number = "";
   @Input() min?: string;
   @Input() max?: string;
   @Input() step?: number;
@@ -47,9 +63,12 @@ export class InputFieldComponent {
   @Input() success: boolean = false;
   @Input() error: boolean = false;
   @Input() hint?: string;
-  @Input() className: string = '';
+  @Input() className: string = "";
 
   @Output() valueChange = new EventEmitter<string | number>();
+
+  private onChange: (value: any) => void = () => {};
+  private _onTouched: () => void = () => {};
 
   get inputClasses(): string {
     let inputClasses = `h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 ${this.className}`;
@@ -68,6 +87,30 @@ export class InputFieldComponent {
 
   onInput(event: Event) {
     const input = event.target as HTMLInputElement;
-    this.valueChange.emit(this.type === 'number' ? +input.value : input.value);
+    const value = this.type === "number" ? +input.value : input.value;
+    this.value = value;
+    this.valueChange.emit(value);
+    this.onChange(value);
+  }
+
+  onBlur(): void {
+    this._onTouched();
+  }
+
+  // ControlValueAccessor methods
+  writeValue(value: any): void {
+    this.value = value || "";
+  }
+
+  registerOnChange(fn: (value: any) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this._onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 }
