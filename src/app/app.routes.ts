@@ -19,6 +19,10 @@ import { SignInComponent } from "./pages/auth-pages/sign-in/sign-in.component";
 import { SignUpComponent } from "./pages/auth-pages/sign-up/sign-up.component";
 import { CalenderComponent } from "./pages/calender/calender.component";
 import { AuthGuard } from "./shared/services/auth.guard";
+import { BoxesComponent } from "./pages/boxes/boxes.component";
+import { StockesComponent } from "./pages/stockes/stockes.component";
+import { ItemsComponent } from "./pages/items/items.component";
+import { OrdersComponent } from "./pages/orders/orders.component";
 
 export const routes: Routes = [
   {
@@ -32,6 +36,30 @@ export const routes: Routes = [
         pathMatch: "full",
         title:
           "Angular Ecommerce Dashboard | TailAdmin - Angular Admin Dashboard Template",
+      },
+      {
+        path: "boxes",
+        component: BoxesComponent,
+        title:
+          "Angular Boxes | TailAdmin - Angular Admin Dashboard Template",
+      },
+      {
+        path: "stockes",
+        component: StockesComponent,
+        title:
+          "Angular Stockes | TailAdmin - Angular Admin Dashboard Template",
+      },
+      {
+        path: "items",
+        component: ItemsComponent,
+        title:
+          "Angular Items | TailAdmin - Angular Admin Dashboard Template",
+      },
+      {
+        path: "orders",
+        component: OrdersComponent,
+        title:
+          "Angular Orders | TailAdmin - Angular Admin Dashboard Template",
       },
       {
         path: "calendar",
