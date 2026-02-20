@@ -1,0 +1,199 @@
+<div class="fixed inset-0 z-100 flex items-center justify-center" [class.hidden]="!(isOpen$ | async)">
+  <!-- Overlay -->
+  <div
+    class="absolute inset-0 bg-black/50"
+    (click)="closeModal()"
+  ></div>
+
+  <!-- Modal Content -->
+  <div class="relative z-10 w-full max-w-md rounded-lg bg-white p-6 dark:bg-gray-800">
+    <!-- Header -->
+    <div class="mb-4 flex items-center justify-between">
+      <h2 class="text-lg font-semibold text-gray-800 dark:text-white">
+        {{ isEditMode ? 'Edit Item' : 'Add New Item' }}
+      </h2>
+      <button
+        type="button"
+        (click)="closeModal()"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+      >
+        <svg
+          class="h-6 w-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Error Message -->
+    @if (error) {
+    <div
+      class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400"
+    >
+      {{ error }}
+    </div>
+    }
+
+    <!-- Success Message -->
+    @if (success) {
+    <div
+      class="mb-4 rounded-lg bg-green-50 p-4 text-sm text-green-700 dark:bg-green-900/20 dark:text-green-400"
+    >
+      {{ success }}
+    </div>
+    }
+
+    <!-- Form -->
+    <form (ngSubmit)="onSubmit()" class="space-y-4">
+      <!-- Name Field -->
+      <div>
+        <app-label [for]="'name'">Name</app-label>
+        <app-input-field
+          id="name"
+          name="name"
+          placeholder="Enter item name"
+          [(ngModel)]="form.name"
+          [error]="!!error && error.includes('Name')"
+        />
+      </div>
+
+      <!-- Description Field -->
+      <div>
+        <app-label [for]="'description'">Description</app-label>
+        <textarea
+          id="description"
+          name="description"
+          placeholder="Enter item description"
+          [(ngModel)]="form.description"
+          class="w-full rounded-lg border border-gray-300 px-4 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <!-- Category Field -->
+      <div>
+        <app-label [for]="'category'">Category</app-label>
+        <select
+          id="category"
+          name="category"
+          [(ngModel)]="form.category"
+          class="w-full h-11 rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-transparent text-gray-800 focus:outline-hidden focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+        >
+          <option value="" disabled selected>
+            {{ categories.length === 0 ? 'Aucune catégorie disponible' : 'Sélectionnez une catégorie' }}
+          </option>
+          <option *ngFor="let cat of categories" [value]="cat._id">{{ cat?.name }}</option>
+        </select>
+      </div>
+
+      <!-- Store Field -->
+      <div>
+        <app-label [for]="'store'">Store</app-label>
+        <select
+          id="store"
+          name="store"
+          [(ngModel)]="form.store"
+          class="w-full h-11 rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-transparent text-gray-800 focus:outline-hidden focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+        >
+          <option value="" disabled selected>
+            {{ stores.length === 0 ? 'Aucun store disponible' : 'Sélectionnez un store' }}
+          </option>
+          <option *ngFor="let store of stores" [value]="store._id">{{ store?.name }}</option>
+        </select>
+      </div>
+
+      <!-- Price Field -->
+      <div>
+        <app-label [for]="'price'">Price</app-label>
+        <app-input-field
+          id="price"
+          name="price"
+          type="number"
+          placeholder="Enter price"
+          [(ngModel)]="form.price"
+          min="0"
+          [step]="0.01"
+          [error]="!!error && error.includes('Price')"
+        />
+      </div>
+
+      <!-- Photo Field (improved input with drag-drop, preview, remove) -->
+      <div>
+        <app-label [for]="'photo'">Photo</app-label>
+
+        <div
+          id="photoDrop"
+          class="mt-2 flex flex-col items-center gap-4 rounded-lg border-2 border-dashed p-4"
+          [class.border-brand-500]="isDragOver"
+          (drop)="onDrop($event)"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+        >
+          <!-- Preview Section -->
+          <div class="flex h-32 w-full items-center justify-center">
+            @if (photoPreviewUrl) {
+            <img [src]="photoPreviewUrl" alt="Preview" class="max-h-32 max-w-full rounded object-contain" />
+            } @else {
+            <div class="flex h-32 w-full items-center justify-center rounded bg-gray-100 dark:bg-gray-800 text-center text-sm text-gray-500">
+              <span>No image selected</span>
+            </div>
+            }
+          </div>
+
+          <!-- File Controls Section -->
+          <div class="w-full flex flex-col gap-2">
+            <label class="flex w-full cursor-pointer items-center justify-center rounded-lg bg-brand-50 px-4 py-3 transition hover:bg-brand-100 dark:bg-brand-900/20 dark:hover:bg-brand-900/30">
+              <span class="text-sm font-medium text-brand-600 dark:text-brand-400">+ Choose Photo</span>
+              <input id="photo" name="photo" type="file" accept="image/*" (change)="onFileSelected($event)" class="hidden" />
+            </label>
+
+            @if (selectedPhoto) {
+            <div class="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 dark:bg-gray-700">
+              <span class="text-sm text-gray-700 dark:text-gray-300 truncate">{{ selectedPhoto.name }}</span>
+              <button type="button" (click)="removeSelectedPhoto()" class="text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+                ✕ Remove
+              </button>
+            </div>
+            }
+
+            @if (photoError) {
+            <div class="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">
+              {{ photoError }}
+            </div>
+            } @else {
+            <div class="text-center text-xs text-gray-500 dark:text-gray-400">
+              Drag & drop or click to select. Max 5MB.
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="mt-6 flex gap-3">
+        <app-button
+          [disabled]="isLoading"
+          variant="outline"
+          (btnClick)="closeModal()"
+        >
+          Cancel
+        </app-button>
+        <button
+          type="submit"
+          [disabled]="isLoading"
+          class="inline-flex items-center justify-center gap-2 rounded-lg transition px-5 py-3.5 text-sm bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {{ isLoading ? 'Saving...' : isEditMode ? 'Update' : 'Create' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
