@@ -3,48 +3,88 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-
-
-
+import { User } from './user.service';
 
 export interface Store {
   _id?: string;
   name: string;
   description: string;
-  location: string;
+  manager: User | string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class StoresService {
+
   private readonly storeUrl = `${environment.apiBaseUrl}/stores`;
 
-  
   constructor(private http: HttpClient) {}
 
+  // JWT Headers
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
-    let headers = new HttpHeaders();
 
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
-      console.log('Token envoyé:', `Bearer ${token.substring(0, 20)}...`);
-    } else {
-      console.warn('Aucun token trouvé dans localStorage');
-    }
-
-    return headers;
+    return new HttpHeaders({
+      Authorization: token ? `Bearer ${token}` : ''
+    });
   }
 
-    // Get all stores
-    getStores(): Observable<Store[]> {
-        return this.http.get<{ success: boolean; stores: Store[] }>(
-            `${this.storeUrl}`, { headers: this.getHeaders() }
-        ).pipe(
-            map(response => response.stores)
-        );
-    }
+  // Gestion erreur globale
+  private handleError(error: HttpErrorResponse) {
+    return throwError(() => error?.error || { message: 'Server error' });
+  }
 
+  // Get all stores
+  getStores(): Observable<Store[]> {
+    return this.http.get<{ success: boolean; stores: Store[] }>(
+      this.storeUrl,
+      { headers: this.getHeaders() }
+    ).pipe(
+      map(response => response.stores),
+      catchError(this.handleError)
+    );
+  }
 
+  // Get single store
+  getStore(id: string): Observable<Store> {
+    return this.http.get<Store>(
+      `${this.storeUrl}/${id}`,
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Create store
+  createStore(store: Store): Observable<Store> {
+    return this.http.post<Store>(
+      this.storeUrl,
+      store,
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Update store
+  updateStore(id: string, store: Store): Observable<Store> {
+    return this.http.put<Store>(
+      `${this.storeUrl}/${id}`,
+      store,
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Delete store
+  deleteStore(id: string): Observable<any> {
+    return this.http.delete(
+      `${this.storeUrl}/${id}`,
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
 }

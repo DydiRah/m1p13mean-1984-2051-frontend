@@ -74,5 +74,10 @@ export class UserService {
         return throwError(() => new Error('Something bad happened; please try again later.'));
     }
 
-
+    getStoreUsers() {
+        return this.http.get<any[]>(
+            `${this.userUrl}/storesUsers`,
+            { headers: this.getHeaders() }
+        );
+    }
 }

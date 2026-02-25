@@ -25,14 +25,14 @@
   >
     <div>
       <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">
-        Boxes Management
+        Store Management
       </h2>
       <p class="text-sm text-gray-600 dark:text-gray-400">
-        Manage your boxes inventory
+        Manage your stores inventory
       </p>
     </div>
     <app-button variant="primary" (btnClick)="openAddModal()">
-      + Add New boxes
+      + Add New stores
     </app-button>
   </div>
 
@@ -49,13 +49,13 @@
         <p class="text-gray-600 dark:text-gray-400">Loading boxes...</p>
       </div>
     </div>
-    } @else if (boxes.length === 0) {
+    } @else if (stores.length === 0) {
     <div class="mx-auto w-full max-w-[630px] px-5 py-12 text-center xl:px-10">
       <h3 class="mb-4 font-semibold text-gray-800 text-theme-xl dark:text-white/90">
-        No Boxes Found
+        No Stores Found
       </h3>
       <p class="text-sm text-gray-500 dark:text-gray-400">
-        Start by creating your first box.
+        Start by creating your first store.
       </p>
     </div>
     } @else {
@@ -68,22 +68,17 @@
               <th
                 class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
-                Id
+                Name
               </th>
               <th
                 class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
-                Size
+                Description
               </th>
               <th
                 class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
-                Price
-              </th>
-              <th
-                class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
-                Status
+                Manager
               </th>
               <th
                 class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
@@ -94,40 +89,37 @@
           </thead>
           <!-- Table Body -->
           <tbody class="divide-y divide-gray-100 dark:divide-white/[0.05]">
-            @for (box of boxes; track box._id) {
+            @for (store of stores; track store._id) {
             <tr
               class="hover:bg-gray-50 transition-colors dark:hover:bg-white/[0.02]"
             >
               <td
                 class="px-5 py-4 sm:px-6 text-start text-gray-800 dark:text-white/90"
               >
-                <span class="font-medium">{{ box._id }}</span>
+                <span class="font-medium">{{ store.name }}</span>
               </td>
               <td
                 class="px-5 py-4 sm:px-6 text-start text-gray-800 dark:text-white/90"
               >
-                <span class="font-medium">{{ box.size }} m²</span>
+                <span class="font-medium">{{ store.description }}</span>
               </td>
               <td
                 class="px-5 py-4 sm:px-6 text-start text-gray-600 dark:text-gray-400"
               >
-                <span class="line-clamp-1"> {{ box.price | number : '1.2-2' }} Ariary</span>
-              </td>
-              <td
-                class="px-5 py-4 sm:px-6 text-start text-gray-800 dark:text-white/90"
-              >
-                <span class="font-medium">{{ box.status }}</span>
+                <span class="line-clamp-1">
+                  {{ getManagerName(store.manager) }}
+                </span>
               </td>
               <td class="px-5 py-4 sm:px-6 text-start">
                 <div class="flex items-center gap-2">
                   <button
-                    (click)="openEditModal(box)"
+                    (click)="openEditModal(store)"
                     class="rounded-lg bg-blue-50 px-3 py-2 text-sm font-medium text-blue-600 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/30 transition-colors"
                   >
                     Edit
                   </button>
                   <button
-                    (click)="deleteBox(box._id)"
+                    (click)="deleteStore(store._id)"
                     class="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30 transition-colors"
                   >
                     Delete
@@ -144,7 +136,7 @@
   </div>
 
   <!-- Modal Component -->
-  <app-box-form-modal></app-box-form-modal>
+  <app-store-form-modal></app-store-form-modal>
 
   <!-- Confirm Dialog Component -->
   <app-confirm-dialog></app-confirm-dialog>
