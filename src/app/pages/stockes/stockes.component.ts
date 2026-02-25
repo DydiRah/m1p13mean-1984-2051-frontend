@@ -69,7 +69,7 @@ export class StockesComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isLoading = true;
     this.error = null;    
     this.stockMovementService
-    .getStockMovements(this.selectedItem, this.selectedStockType)
+    .getStockMovements()
     .pipe(takeUntil(this.destroy$))
     .subscribe({
       next: (stocks) => {
