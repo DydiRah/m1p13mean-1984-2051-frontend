@@ -12,6 +12,7 @@ import {
   HttpErrorResponse,
 } from "@angular/common/http";
 import { environment } from "../../../../../environments/environment";
+import { UserService } from "../../../services/user.service";
 
 @Component({
   selector: "app-signin-form",
@@ -43,6 +44,7 @@ export class SigninFormComponent {
   constructor(
     private http: HttpClient,
     private router: Router,
+    private userService: UserService
   ) {}
 
   togglePasswordVisibility() {
@@ -67,6 +69,7 @@ export class SigninFormComponent {
         next: (res) => {
           const token = res && (res.token as string | undefined);
           if (token) {
+            this.userService.loadCurrentUser(); // Charger les données de l'utilisateur après connexion
             localStorage.setItem("token", token);
             this.router.navigateByUrl("/");
           } else {

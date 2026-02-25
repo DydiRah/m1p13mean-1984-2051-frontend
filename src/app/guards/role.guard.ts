@@ -12,8 +12,8 @@ export const roleGuard: CanActivateFn = (route, state): Observable<boolean> => {
   return userService.currentUser$.pipe(
     map(user => {
       if (!user || !user.role) {
-        router.navigate(['/signin']); // redirige si pas de user ou rôle
-        return false;
+        // router.navigate(['/signin']); // redirige si pas de user ou rôle
+        return true;
       }
 
       if (allowedRoles.includes(user.role)) {

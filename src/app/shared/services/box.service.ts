@@ -38,10 +38,10 @@ export class BoxesService {
 
   // GET ALL BOXES
   getBoxes(): Observable<Box[]> {
-      return this.http.get<{ success: boolean; stockMovements: Box[] }>(
+      return this.http.get<{ success: boolean; boxes: Box[] }>(
           `${this.boxesUrl}`, { headers: this.getHeaders() }
       ).pipe(
-          map(response => response.stockMovements)
+          map(response => response.boxes)
       );
   }
 

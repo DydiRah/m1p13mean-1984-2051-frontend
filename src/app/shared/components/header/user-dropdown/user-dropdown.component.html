@@ -4,9 +4,9 @@
     class="flex items-center text-gray-700 dropdown-toggle dark:text-gray-400"
   >
     <span class="mr-3 overflow-hidden rounded-full h-11 w-11">
-      <img src="/images/user/owner.png" alt="User" />
+      <img src="{{getImageUrl(user)}}" alt="User" />
     </span>
-    <span class="block mr-1 font-medium text-theme-sm">Musharof</span>
+    <span class="block mr-1 font-medium text-theme-sm">{{user?.first_name}}</span>
     <svg
       [ngClass]="{
         'stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200': true,
@@ -37,10 +37,10 @@
       <span
         class="block font-medium text-gray-700 text-theme-sm dark:text-gray-400"
       >
-        Musharof Chowdhury
+        {{user?.first_name}} {{user?.last_name}}
       </span>
       <span class="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-        randomuser&#64;pimjo.com
+        {{user?.email}}
       </span>
     </div>
 
