@@ -94,6 +94,37 @@
         </select>
       </div>
 
+      <!-- Store Field -->
+      <div>
+        <app-label [for]="'store'">Store</app-label>
+        <select
+          id="store"
+          name="store"
+          [(ngModel)]="form.store_id"
+          class="w-full h-11 rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-transparent text-gray-800 focus:outline-hidden focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+        >
+          <option value="" disabled>
+            {{ stores.length === 0 ? 'Aucun store disponible' : 'Sélectionnez un store' }}
+          </option>
+          <option *ngFor="let store of stores" [ngValue]="store._id">{{ store?.name }}</option>
+        </select>
+      </div>
+
+      
+      <!-- Type_stock Field -->
+      <div>
+        <app-label [for]="'type_stock'">Type of Stock</app-label>
+        <select
+          id="type_stock"
+          name="type_stock"
+          [(ngModel)]="form.type_stock"
+          class="w-full h-11 rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-transparent text-gray-800 focus:outline-hidden focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+        >
+          <option value="" disabled>Sélectionnez le type de stock</option>
+          <option value="FIFO">FIFO</option>
+          <option value="LIFO">LIFO </option>
+        </select>
+      </div>
 
       <!-- Price Field -->
       <div>

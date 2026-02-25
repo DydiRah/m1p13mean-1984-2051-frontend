@@ -1,0 +1,116 @@
+<div class="fixed inset-0 z-100 flex items-center justify-center" [class.hidden]="!(isOpen$ | async)">
+  <!-- Overlay -->
+  <div
+    class="absolute inset-0 bg-black/50"
+    (click)="closeModal()"
+  ></div>
+
+  <!-- Modal Content -->
+  <div class="relative z-10 w-full max-w-md rounded-lg bg-white p-6 dark:bg-gray-800">
+    
+    <!-- Header -->
+    <div class="mb-4 flex items-center justify-between">
+      <h2 class="text-lg font-semibold text-gray-800 dark:text-white">
+        {{ isEditMode ? 'Edit Box' : 'Add New Box' }}
+      </h2>
+      <button
+        type="button"
+        (click)="closeModal()"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+      >
+        <svg
+          class="h-6 w-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Error Message -->
+    @if (error) {
+      <div class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
+        {{ error }}
+      </div>
+    }
+
+    <!-- Success Message -->
+    @if (success) {
+      <div class="mb-4 rounded-lg bg-green-50 p-4 text-sm text-green-700 dark:bg-green-900/20 dark:text-green-400">
+        {{ success }}
+      </div>
+    }
+
+    <!-- Form -->
+    <form (ngSubmit)="onSubmit()" class="space-y-4">
+
+      <!-- Size Field -->
+      <div>
+        <app-label [for]="'size'">Size (m²)</app-label>
+        <app-input-field
+          id="size"
+          name="size"
+          type="number"
+          placeholder="Enter box size"
+          [(ngModel)]="form.size"
+          min="0"
+          required
+        />
+      </div>
+
+      <!-- Price Field -->
+      <div>
+        <app-label [for]="'price'">Price</app-label>
+        <app-input-field
+          id="price"
+          name="price"
+          type="number"
+          placeholder="Enter price"
+          [(ngModel)]="form.price"
+          min="0"
+          required
+        />
+      </div>
+
+      <!-- Status Field -->
+      <div>
+        <app-label [for]="'status'">Status</app-label>
+        <select
+          id="status"
+          name="status"
+          [(ngModel)]="form.status"
+          class="w-full h-11 rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-transparent text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+        >
+          <option value="available">Available</option>
+          <option value="occupied">Occupied</option>
+        </select>
+      </div>
+
+      <!-- Buttons -->
+      <div class="mt-6 flex gap-3">
+        <app-button
+          [disabled]="isLoading"
+          variant="outline"
+          (btnClick)="closeModal()"
+        >
+          Cancel
+        </app-button>
+
+        <button
+          type="submit"
+          [disabled]="isLoading"
+          class="inline-flex items-center justify-center gap-2 rounded-lg transition px-5 py-3.5 text-sm bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {{ isLoading ? 'Saving...' : isEditMode ? 'Update' : 'Create' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

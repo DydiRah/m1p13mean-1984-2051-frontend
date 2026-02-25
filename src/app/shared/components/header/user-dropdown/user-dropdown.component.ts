@@ -3,8 +3,6 @@ import { DropdownComponent } from "../../ui/dropdown/dropdown.component";
 import { CommonModule } from "@angular/common";
 import { Router, RouterModule } from "@angular/router";
 import { DropdownItemTwoComponent } from "../../ui/dropdown/dropdown-item/dropdown-item.component-two";
-import { UserService, User } from "../../../services/user.service";
-import { environment } from "../../../../../environments/environment";
 
 @Component({
   selector: "app-user-dropdown",
@@ -18,7 +16,6 @@ import { environment } from "../../../../../environments/environment";
 })
 export class UserDropdownComponent {
   isOpen = false;
-  user: User = {};
 
   constructor(private router: Router,  private userService: UserService) {
   }
@@ -37,7 +34,7 @@ export class UserDropdownComponent {
     }
   }
 
-  toggleDropdown() {    
+  toggleDropdown() {
     this.isOpen = !this.isOpen;
   }
 
