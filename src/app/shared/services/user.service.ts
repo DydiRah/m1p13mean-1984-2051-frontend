@@ -22,7 +22,10 @@ export interface User {
 })
 export class UserService {
     private readonly userUrl = `${environment.apiBaseUrl}/users`;
+    private currentUserSubject = new BehaviorSubject<User | null>(null);
     
+    currentUser$ = this.currentUserSubject.asObservable();
+
     constructor(private http: HttpClient) {}
 
     private getHeaders(): HttpHeaders {
@@ -39,14 +42,31 @@ export class UserService {
         return headers;
     }
 
-    // Get current user info
-    getCurrentUser(): Observable<User> {
-    return this.http.get<User>(
-        `${this.userUrl}/me`,
-        { headers: this.getHeaders() }
-    );
+    loadCurrentUser(): void {
+        this.getCurrentUser().subscribe({
+            next: (user) => {
+            this.currentUserSubject.next(user);
+            },
+            error: (err) => {
+            console.warn('Impossible de charger l’utilisateur actuel:', err);
+            this.currentUserSubject.next(null);
+            }
+        });
     }
 
+    getCurrentUser(): Observable<User> {
+        return this.http.get<User>(
+            `${this.userUrl}/me`,
+            { headers: this.getHeaders() }
+        ).pipe(
+            catchError(this.handleError)
+        );
+    }
+
+    logout(): void {
+        localStorage.removeItem('token');
+        this.currentUserSubject.next(null);
+    }
 
     //Handle errors
     private handleError(error: HttpErrorResponse) {

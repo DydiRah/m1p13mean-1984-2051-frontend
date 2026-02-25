@@ -20,18 +20,13 @@ export class UserDropdownComponent {
   isOpen = false;
   user: User = {};
 
-  constructor(private router: Router, private userService: UserService) {
+  constructor(private router: Router,  private userService: UserService) {
   }
 
   ngOnInit() {
-    this.userService.getCurrentUser().subscribe({
-      next: (user) => {
-        this.user = user;
-      },
-      error: (err) => {
-        console.error('Failed to fetch user info:', err);
-      }
-    });  
+    this.userService.currentUser$.subscribe(user => {
+      this.user = user || {};
+    }); 
   }
 
   getImageUrl(user: any): string {

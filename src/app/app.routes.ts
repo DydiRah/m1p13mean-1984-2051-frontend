@@ -18,17 +18,17 @@ import { VideosComponent } from "./pages/ui-elements/videos/videos.component";
 import { SignInComponent } from "./pages/auth-pages/sign-in/sign-in.component";
 import { SignUpComponent } from "./pages/auth-pages/sign-up/sign-up.component";
 import { CalenderComponent } from "./pages/calender/calender.component";
-import { AuthGuard } from "./shared/services/auth.guard";
 import { BoxesComponent } from "./pages/boxes/boxes.component";
 import { StockesComponent } from "./pages/stockes/stockes.component";
 import { ItemsComponent } from "./pages/items/items.component";
 import { OrdersComponent } from "./pages/orders/orders.component";
+import { roleGuard } from "./guards/role.guard";
 
 export const routes: Routes = [
   {
     path: "",
     component: AppLayoutComponent,
-    canActivateChild: [AuthGuard],
+    canActivateChild: [roleGuard],
     children: [
       {
         path: "",
@@ -36,30 +36,35 @@ export const routes: Routes = [
         pathMatch: "full",
         title:
           "Angular Ecommerce Dashboard | TailAdmin - Angular Admin Dashboard Template",
+        data: { roles: ['admin', 'store'] }
       },
       {
         path: "boxes",
         component: BoxesComponent,
         title:
           "Angular Boxes | TailAdmin - Angular Admin Dashboard Template",
+        data: { roles: ['admin', 'store'] }
       },
       {
         path: "stockes",
         component: StockesComponent,
         title:
           "Angular Stockes | TailAdmin - Angular Admin Dashboard Template",
+        data: { roles: ['store'] }
       },
       {
         path: "items",
         component: ItemsComponent,
         title:
           "Angular Items | TailAdmin - Angular Admin Dashboard Template",
+        data: { roles: ['store', 'buyer'] }
       },
       {
         path: "orders",
         component: OrdersComponent,
         title:
           "Angular Orders | TailAdmin - Angular Admin Dashboard Template",
+        data: { roles: ['store', 'buyer'] }
       },
       {
         path: "calendar",
