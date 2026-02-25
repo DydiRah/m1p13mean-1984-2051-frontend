@@ -124,13 +124,13 @@
                 class="px-5 py-4 sm:px-6 text-start text-gray-600 dark:text-gray-400"
               >
                 <app-badge size="sm" color="info">
-                  {{ item.category }}
+                  {{ item.category?.name }}
                 </app-badge>
               </td>
               <td
                 class="px-5 py-4 sm:px-6 text-start font-semibold text-gray-800 dark:text-white/90"
               >
-                ${{ item.price | number : '1.2-2' }}
+                {{ item.price | number : '1.2-2' }} Ariary
               </td>
               <td class="px-5 py-4 sm:px-6 text-start">
                 <div class="flex items-center gap-2">

@@ -14,8 +14,10 @@ export interface Item {
   image_url?: string;
   quantity: number;
   type_stock?: 'LIFO' | 'FIFO';
-  category: Category | string;
-  store: Store | string;
+  category_id: Category | string;
+  store_id: Store | string;
+  category?: Category;
+  store?: Store;
 }
 
 @Injectable({
@@ -65,8 +67,8 @@ export class ItemsService {
     form.append('description', item.description);
     form.append('price', String(item.price));
     form.append('quantity', String(item.quantity));
-    form.append('category', typeof item.category === 'string' ? item.category : item.category._id || '');
-    form.append('store', typeof item.store === 'string' ? item.store : item.store._id || '');
+    form.append('category', typeof item.category_id === 'string' ? item.category_id : item.category_id._id || '');
+    form.append('store', typeof item.store_id === 'string' ? item.store_id : item.store_id._id || '');
     if (item.type_stock) {
       form.append('type_stock', item.type_stock);
     }
@@ -99,8 +101,8 @@ export class ItemsService {
     const form = new FormData();
     form.append('name', item.name);
     form.append('description', item.description);
-    form.append('category', typeof item.category === 'string' ? item.category : item.category._id || '');
-    form.append('store', typeof item.store === 'string' ? item.store : item.store._id || '');
+    form.append('category', typeof item.category_id === 'string' ? item.category_id : item.category_id._id || '');
+    form.append('store', typeof item.store_id === 'string' ? item.store_id : item.store_id._id || '');
     form.append('price', String(item.price));
     form.append('quantity', String(item.quantity));
     if (item.type_stock) {

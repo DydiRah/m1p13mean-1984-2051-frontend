@@ -44,8 +44,8 @@ export class ItemFormModalComponent implements OnInit, OnDestroy {
     price: null as number | null,
     quantity: 0 as number,
     type_stock: null as 'LIFO' | 'FIFO' | null,
-    category: '' as string | Category,
-    store: '' as string | Store,
+    category_id: '' as string | Category,
+    store_id: '' as string | Store,
   };
   selectedPhoto: File | null = null;
   photoPreviewUrl: string | null = null;
@@ -90,11 +90,11 @@ export class ItemFormModalComponent implements OnInit, OnDestroy {
       _id: '',
       name: '',
       description: '',
-      category: '',
       price: null,
       quantity: 0,
       type_stock: null,
-      store: '',
+      category_id: '',
+      store_id: '',
     };
     this.error = null;
     this.success = null;
@@ -125,8 +125,8 @@ export class ItemFormModalComponent implements OnInit, OnDestroy {
         price: parsedPrice,
         quantity: item.quantity,
         type_stock: item.type_stock || null,
-        category: item.category,
-        store: item.store,
+        category_id: item.category_id,
+        store_id: item.store_id,
       };
       this.photoPreviewUrl = item.image_url ? this.getImageUrl(item) : null;
       this.isEditMode = true;
@@ -160,8 +160,9 @@ export class ItemFormModalComponent implements OnInit, OnDestroy {
       description: this.form.description,
       price: this.form.price!,
       quantity: this.form.quantity,
-      category: this.form.category,
-      store: this.form.store,
+      category_id: this.form.category_id,
+      store_id: this.form.store_id,
+      type_stock: this.form.type_stock || undefined,
     };
     
     const request$ = this.isEditMode
@@ -267,8 +268,12 @@ export class ItemFormModalComponent implements OnInit, OnDestroy {
       this.error = 'Description is required';
       return false;
     }
-    if (!this.form.category) {
+    if (!this.form.category_id) {
       this.error = 'Category is required';
+      return false;
+    }
+    if (!this.form.store_id) {
+      this.error = 'Store is required';
       return false;
     }
     if (this.form.price === null || this.form.price === undefined) {
