@@ -41,9 +41,14 @@ export class StockMovementService {
     }
 
     // Get all stock movements
-    getStockMovements(): Observable<StockMovement[]> {
+    getStockMovements(item?: string, type?: string): Observable<StockMovement[]> {
+        let url = this.stockMovementUrl;
+        const params: any = {};
+        if (item) params.item_id = item;
+        if (type) params.type = type;
+
         return this.http.get<{ success: boolean; stockMovements: StockMovement[] }>(
-            `${this.stockMovementUrl}`, { headers: this.getHeaders() }
+            `${this.stockMovementUrl}`, { headers: this.getHeaders(), params }
         ).pipe(
             map(response => response.stockMovements)
         );

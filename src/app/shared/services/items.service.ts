@@ -13,9 +13,7 @@ export interface Item {
   price: string | number;
   image_url?: string;
   quantity: number;
-  type_stock?: 'LIFO' | 'FIFO';
   category_id: Category | string;
-  store_id: Store | string;
   category?: Category;
   store?: Store;
 }
@@ -68,10 +66,6 @@ export class ItemsService {
     form.append('price', String(item.price));
     form.append('quantity', String(item.quantity));
     form.append('category', typeof item.category_id === 'string' ? item.category_id : item.category_id._id || '');
-    form.append('store', typeof item.store_id === 'string' ? item.store_id : item.store_id._id || '');
-    if (item.type_stock) {
-      form.append('type_stock', item.type_stock);
-    }
     if (photo) {
       form.append('photo', photo);
     }    
@@ -79,9 +73,6 @@ export class ItemsService {
     return this.http.post<Item>(this.itemsUrl, form, {
       headers: this.getHeaders()
     }).pipe(
-      tap(response => {
-        console.log('POST response from server:', response);
-      }),
       catchError((error) => {
         console.error('❌ Erreur POST items: status=', error.status, 'statusText=', error.statusText, 'url=', error.url);
         console.error('❌ Erreur POST items - raw error object:', error);
@@ -102,12 +93,9 @@ export class ItemsService {
     form.append('name', item.name);
     form.append('description', item.description);
     form.append('category', typeof item.category_id === 'string' ? item.category_id : item.category_id._id || '');
-    form.append('store', typeof item.store_id === 'string' ? item.store_id : item.store_id._id || '');
     form.append('price', String(item.price));
     form.append('quantity', String(item.quantity));
-    if (item.type_stock) {
-      form.append('type_stock', item.type_stock);
-    }
+
     if (photo) {
       form.append('photo', photo, photo.name);
     }
