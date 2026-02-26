@@ -1,0 +1,97 @@
+<div class="fixed inset-0 z-100 flex items-center justify-center"
+     [class.hidden]="!(isOpen$ | async)">
+
+  <div class="absolute inset-0 bg-black/50" (click)="closeModal()"></div>
+
+  <div class="relative z-10 w-full max-w-md rounded-2xl bg-white p-6 dark:bg-gray-800">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="text-lg font-semibold">
+        Create Contract
+      </h2>
+
+      <button (click)="closeModal()">✕</button>
+    </div>
+
+    <!-- Error -->
+    @if (error) {
+      <div class="bg-red-100 text-red-700 p-3 rounded mb-3">
+        {{ error }}
+      </div>
+    }
+
+    <!-- Success -->
+    @if (success) {
+      <div class="bg-green-100 text-green-700 p-3 rounded mb-3">
+        {{ success }}
+      </div>
+    }
+
+    <form (ngSubmit)="onSubmit()" class="space-y-4">
+      <div>
+        <app-label [for]="'store'">Store</app-label>
+        <select
+          id="store"
+          name="store"
+          [(ngModel)]="form.store_id"
+          class="w-full h-11 rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-transparent text-gray-800 focus:outline-hidden focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+        >
+          <option value="" disabled>
+            {{ stores.length === 0 ? 'Aucun store disponible' : 'Sélectionnez un store' }}
+          </option>
+          <option *ngFor="let store of stores" [value]="store._id">{{ store?.name }}</option>
+        </select>
+      </div>
+
+      <div>
+        <app-label [for]="'store'">Début location</app-label>
+        <input
+          id="event-start-date"
+          type="date"
+          [(ngModel)]="form.startDateLocation"
+          name="startDateLocation"
+          class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+        />
+      </div>
+
+      <div>
+        <app-label [for]="'store'">Fin location</app-label>
+        <input
+          id="event-start-date"
+          type="date"
+          [(ngModel)]="form.endDateLocation"
+          name="endDateLocation"
+          class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+        />
+      </div>
+
+      <div>
+        <app-label [for]="'store'">Contract PDF</app-label>
+          <input
+            type="file"
+            (change)="onFileSelected($event)"
+            class="w-full"
+          >
+      </div>
+
+      <div class="mt-6 flex gap-3">
+        <app-button
+          [disabled]="isLoading"
+          variant="outline"
+          (btnClick)="closeModal()"
+        >
+          Cancel
+        </app-button>
+        <button
+          type="submit"
+          [disabled]="isLoading"
+          class="inline-flex items-center justify-center gap-2 rounded-lg transition px-5 py-3.5 text-sm bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {{ isLoading ? 'Saving...' : 'Create' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

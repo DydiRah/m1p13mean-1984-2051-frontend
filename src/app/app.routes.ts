@@ -23,6 +23,7 @@ import { StoresComponent } from "./pages/stores/stores.component";
 import { StockesComponent } from "./pages/stockes/stockes.component";
 import { ItemsComponent } from "./pages/items/items.component";
 import { OrdersComponent } from "./pages/orders/orders.component";
+import { ContractComponent } from "./pages/contract/contract.component";
 import { roleGuard } from "./guards/role.guard";
 
 export const routes: Routes = [
@@ -45,6 +46,12 @@ export const routes: Routes = [
         title:
           "Angular Boxes | TailAdmin - Angular Admin Dashboard Template",
         data: { roles: ['admin', 'store'] }
+      },
+      {
+        path: "contract/:boxId",
+        component: ContractComponent,
+        title: "Angular Boxes | TailAdmin - Angular Admin Dashboard Template",
+        data: { roles: ['admin'] }
       },
       {
         path: "boxes",

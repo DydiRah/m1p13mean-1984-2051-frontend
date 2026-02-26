@@ -79,20 +79,6 @@
         />
       </div>
 
-      <!-- Status Field -->
-      <div>
-        <app-label [for]="'status'">Status</app-label>
-        <select
-          id="status"
-          name="status"
-          [(ngModel)]="form.status"
-          class="w-full h-11 rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-transparent text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
-        >
-          <option value="available">Available</option>
-          <option value="occupied">Occupied</option>
-        </select>
-      </div>
-
       <!-- Buttons -->
       <div class="mt-6 flex gap-3">
         <app-button

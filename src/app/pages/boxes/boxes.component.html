@@ -118,20 +118,46 @@
               >
                 <span class="font-medium">{{ box.status }}</span>
               </td>
-              <td class="px-5 py-4 sm:px-6 text-start">
-                <div class="flex items-center gap-2">
-                  <button
-                    (click)="openEditModal(box)"
-                    class="rounded-lg bg-blue-50 px-3 py-2 text-sm font-medium text-blue-600 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/30 transition-colors"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    (click)="deleteBox(box._id)"
-                    class="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30 transition-colors"
-                  >
-                    Delete
-                  </button>
+              <td class="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
+                <div class="relative inline-block">
+                  <app-table-dropdown>
+                    <div dropdown-button>
+                      <button class="text-gray-500 dark:text-gray-400">
+                        <svg
+                          class="fill-current"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M5.99902 10.245C6.96552 10.245 7.74902 11.0285 7.74902 11.995V12.005C7.74902 12.9715 6.96552 13.755 5.99902 13.755C5.03253 13.755 4.24902 12.9715 4.24902 12.005V11.995C4.24902 11.0285 5.03253 10.245 5.99902 10.245ZM17.999 10.245C18.9655 10.245 19.749 11.0285 19.749 11.995V12.005C19.749 12.9715 18.9655 13.755 17.999 13.755C17.0325 13.755 16.249 12.9715 16.249 12.005V11.995C16.249 11.0285 17.0325 10.245 17.999 10.245ZM13.749 11.995C13.749 11.0285 12.9655 10.245 11.999 10.245C11.0325 10.245 10.249 11.0285 10.249 11.995V12.005C10.249 12.9715 11.0325 13.755 11.999 13.755C12.9655 13.755 13.749 12.9715 13.749 12.005V11.995Z"
+                            fill=""
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <div dropdown-content>
+                      <button (click)="goToContracts(box._id)"
+                        class="text-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                      >
+                        Contract
+                      </button>
+                      <button (click)="openEditModal(box)"
+                        class="text-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                      >
+                        Edit
+                      </button>
+                      <button (click)="deleteBox(box._id)"
+                        class="text-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </app-table-dropdown>
                 </div>
               </td>
             </tr>
