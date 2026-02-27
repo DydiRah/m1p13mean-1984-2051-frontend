@@ -1,7 +1,8 @@
 
 import { Component, Input, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StockMovement } from '../../../services/stockMovement.service';
+import { Item } from '../../../services/items.service';
+import { environment } from '../../../../../environments/environment.prod';
 
 
 @Component({
@@ -11,12 +12,9 @@ import { StockMovement } from '../../../services/stockMovement.service';
   styles: ``
 })
 export class ItemCardComponent {
-  @Input() image!: string;
-  @Input() name!: string;
-  @Input() description!: string;
-  @Input() price!: string | number;
-  @Input() quantity!: number;
-  @Input() category!: string;
-  @Input() store!: string;
-  @Input() owner!: string;
+  @Input() item!: Item;
+
+  get imageUrl(): string {
+    return this.item?.image_url ? environment.apiBaseUrl.replace(/\/?api\/?/, '') + this.item.image_url : 'assets/placeholder.png';
+  }
 }

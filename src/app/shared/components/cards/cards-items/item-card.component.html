@@ -3,8 +3,8 @@
   <!-- Image -->
   <div class="relative h-56 overflow-hidden">
     <img
-      [src]="image"
-      [alt]="name"
+      [src]="imageUrl"
+      [alt]="item.name"
       class="w-full h-full object-cover group-hover:scale-110 transition duration-700"
     />
 
@@ -12,17 +12,17 @@
     <div
       class="absolute top-4 left-4 px-3 py-1 text-xs font-semibold rounded-full"
       [ngClass]="{
-        'bg-green-100 text-green-700': quantity > 10,
-        'bg-yellow-100 text-yellow-700': quantity <= 10 && quantity > 0,
-        'bg-red-100 text-red-700': quantity === 0
+        'bg-green-100 text-green-700': item.quantity > 10,
+        'bg-yellow-100 text-yellow-700': item.quantity <= 10 && item.quantity > 0,
+        'bg-red-100 text-red-700': item.quantity === 0
       }"
     >
-      {{ quantity === 0 ? 'Rupture' : quantity + ' en stock' }}
+      {{ item.quantity === 0 ? 'Rupture' : item.quantity + ' en stock' }}
     </div>
 
     <!-- Category -->
     <div class="absolute top-4 right-4 bg-black/70 text-white text-xs px-3 py-1 rounded-full">
-      {{ category }}
+      {{ item.category?.name }}
     </div>
   </div>
 
@@ -32,34 +32,34 @@
     <!-- Name + Price -->
     <div class="flex justify-between items-start">
       <h3 class="text-lg font-semibold text-gray-800 leading-tight">
-        {{ name }}
+        {{ item.name }}
       </h3>
-      <span class="text-xl font-bold text-blue-600">
-        {{ price | currency:'MGA':'symbol':'1.0-0' }}
+      <span class="text-md font-bold text-blue-600">
+        {{ item.price | currency:'':'':'1.0-0':'en-US' }} Ar
       </span>
     </div>
 
     <!-- Description -->
     <p class="text-sm text-gray-600 line-clamp-2">
-      {{ description }}
+      {{ item.description }}
     </p>
 
     <!-- Meta Info -->
     <div class="text-xs text-gray-500 space-y-1 border-t pt-3">
-      <div>🏬 Store : <span class="font-medium text-gray-700">{{ store }}</span></div>
-      <div>👤 Owner : <span class="font-medium text-gray-700">{{ owner }}</span></div>
+      <div>🏬 Store : <span class="font-medium text-gray-700">{{ item.store?.name }}</span></div>
+      <div>👤 Owner : <span class="font-medium text-gray-700">{{ item.owner }}</span></div>
     </div>
 
     <!-- Button -->
     <button
-      [disabled]="quantity === 0"
+      [disabled]="item.quantity === 0"
       class="mt-3 w-full py-2 rounded-xl font-medium transition duration-300"
       [ngClass]="{
-        'bg-blue-600 text-white hover:bg-blue-700': quantity > 0,
-        'bg-gray-300 text-gray-500 cursor-not-allowed': quantity === 0
+        'bg-blue-600 text-white hover:bg-blue-700': item.quantity > 0,
+        'bg-gray-300 text-gray-500 cursor-not-allowed': item.quantity === 0
       }"
     >
-      {{ quantity === 0 ? 'Indisponible' : 'Ajouter au panier' }}
+      {{ item.quantity === 0 ? 'Indisponible' : 'Ajouter au panier' }}
     </button>
 
   </div>

@@ -58,10 +58,10 @@ export class StockMovementService {
 
     // Create a new stock movement
     createStock(stockData: Omit<StockMovement, '_id'>): Observable<StockMovement> {
-        return this.http.post<StockMovement>(this.stockMovementUrl, stockData, {
-        headers: this.getHeaders()
+            return this.http.post<StockMovement>(this.stockMovementUrl, stockData, {
+            headers: this.getHeaders()
         }).pipe(
-        catchError(this.handleError)
+            catchError(this.handleError)
         );
     }
 

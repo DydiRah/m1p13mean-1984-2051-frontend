@@ -43,9 +43,7 @@ export class ItemFormModalComponent implements OnInit, OnDestroy {
     description: '',
     price: null as number | null,
     quantity: 0 as number,
-    type_stock: null as 'LIFO' | 'FIFO' | null,
     category_id: '' as string | Category,
-    store_id: '' as string | Store,
   };
   selectedPhoto: File | null = null;
   photoPreviewUrl: string | null = null;
@@ -92,9 +90,7 @@ export class ItemFormModalComponent implements OnInit, OnDestroy {
       description: '',
       price: null,
       quantity: 0,
-      type_stock: null,
       category_id: '',
-      store_id: '',
     };
     this.error = null;
     this.success = null;
@@ -124,9 +120,7 @@ export class ItemFormModalComponent implements OnInit, OnDestroy {
         description: item.description,
         price: parsedPrice,
         quantity: item.quantity,
-        type_stock: item.type_stock || null,
         category_id: item.category_id,
-        store_id: item.store_id,
       };
       this.photoPreviewUrl = item.image_url ? this.getImageUrl(item) : null;
       this.isEditMode = true;
@@ -161,8 +155,6 @@ export class ItemFormModalComponent implements OnInit, OnDestroy {
       price: this.form.price!,
       quantity: this.form.quantity,
       category_id: this.form.category_id,
-      store_id: this.form.store_id,
-      type_stock: this.form.type_stock || undefined,
     };
     
     const request$ = this.isEditMode
@@ -270,10 +262,6 @@ export class ItemFormModalComponent implements OnInit, OnDestroy {
     }
     if (!this.form.category_id) {
       this.error = 'Category is required';
-      return false;
-    }
-    if (!this.form.store_id) {
-      this.error = 'Store is required';
       return false;
     }
     if (this.form.price === null || this.form.price === undefined) {

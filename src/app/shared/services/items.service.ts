@@ -5,7 +5,6 @@ import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Category } from './categories.service';
 import { Store } from './stores.service';
-import { StockMovement } from './stockMovement.service';
 
 export interface Item {
   _id?: string;
@@ -17,7 +16,7 @@ export interface Item {
   category_id: Category | string;
   category?: Category;
   store?: Store;
-  stock?: StockMovement;
+  owner?: string;
 }
 
 @Injectable({

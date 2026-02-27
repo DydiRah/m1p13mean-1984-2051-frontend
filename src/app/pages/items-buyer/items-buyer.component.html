@@ -92,11 +92,7 @@
   <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
 
     @for (item of filteredItems; track item._id) {
-      <app-item-card
-        [image]="getImageUrl(item)"
-        [name]="item.name"
-        [description]="item.description"
-        [price]="item.price"
+      <app-item-card [item]="item"
       ></app-item-card>
     }
 
