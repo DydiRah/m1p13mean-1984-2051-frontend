@@ -48,9 +48,10 @@ export class UserDropdownComponent {
   }
 
   onSignOut(event?: Event) {
-    if (event) event.preventDefault();
-    localStorage.removeItem("token");
-    this.closeDropdown();
-    this.router.navigateByUrl("/signin");
+    if (event) {
+      event.preventDefault();
+    }
+    this.userService.logout();
+    this.router.navigate(['/signin']);
   }
 }

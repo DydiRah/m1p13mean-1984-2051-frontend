@@ -69,8 +69,8 @@ export class SigninFormComponent {
         next: (res) => {
           const token = res && (res.token as string | undefined);
           if (token) {
-            this.userService.loadCurrentUser(); // Charger les données de l'utilisateur après connexion
             localStorage.setItem("token", token);
+            this.userService.loadCurrentUser();
             this.router.navigateByUrl("/");
           } else {
             this.error =

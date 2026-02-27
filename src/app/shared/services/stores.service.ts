@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { User } from './user.service';
 
@@ -69,6 +69,8 @@ export class StoresService {
 
   // Update store
   updateStore(id: string, store: Store): Observable<Store> {
+    console.log(`${this.storeUrl}/${id}`);
+    
     return this.http.put<Store>(
       `${this.storeUrl}/${id}`,
       store,

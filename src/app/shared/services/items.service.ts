@@ -33,7 +33,6 @@ export class ItemsService {
 
     if (token) {
       headers = headers.set('Authorization', `Bearer ${token}`);
-      console.log('Token envoyé:', `Bearer ${token.substring(0, 20)}...`);
     } else {
       console.warn('Aucun token trouvé dans localStorage');
     }
@@ -103,8 +102,6 @@ export class ItemsService {
     if (photo) {
       form.append('photo', photo, photo.name);
     }
-
-    console.log(item);
 
     try {
       const entries: Array<any> = [];

@@ -1,15 +1,188 @@
 <div>
   <app-page-breadcrumb pageTitle="Orders" />
-  <div class="min-h-screen rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-gray-800 dark:bg-white/[0.03] xl:px-10 xl:py-12">
-    <div class="mx-auto w-full max-w-[630px] text-center">
-      <h3 class="mb-4 font-semibold text-gray-800 text-theme-xl dark:text-white/90 sm:text-2xl">
-        Orders Page
-      </h3>
 
-      <p class="text-sm text-gray-500 dark:text-gray-400 sm:text-base">
-        Start putting content on grids or panels, you can also use different
-        combinations of grids.Please check out the dashboard and other pages
+  <!-- Success Message -->
+  @if (success) {
+  <div
+    class="mb-4 rounded-lg bg-green-50 p-4 text-sm text-green-700 dark:bg-green-900/20 dark:text-green-400"
+  >
+    {{ success }}
+  </div>
+  }
+
+  <!-- Error Message -->
+  @if (error) {
+  <div
+    class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400"
+  >
+    {{ error }}
+  </div>
+  }
+
+  <!-- Header Section -->
+  <div
+    class="mb-6 flex items-center justify-between rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-gray-800 dark:bg-white/[0.03] xl:px-10 xl:py-12"
+  >
+    <div>
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">
+        Orders Management
+      </h2>
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        Manage your orders inventory
       </p>
     </div>
+    <div>
+      <select
+        id="type"
+        name="type"
+        [(ngModel)]="selectedStockType"
+        class="w-full h-11 rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-transparent text-gray-800 focus:outline-hidden focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+      >
+        <option value="" disabled>Sélectionnez le statut</option>
+        <option value="pending">Pending</option>
+        <option value="paid">Paid</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </div>
   </div>
+
+  <!-- Table Section -->
+  <div
+    class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
+  >
+    @if (isLoading) {
+    <div class="flex items-center justify-center p-12">
+      <div class="text-center">
+        <div
+          class="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-brand-500 dark:border-gray-700 dark:border-t-brand-500"
+        ></div>
+        <p class="text-gray-600 dark:text-gray-400">Loading order...</p>
+      </div>
+    </div>
+    } @else if (orders.length === 0) {
+    <div class="mx-auto w-full max-w-[630px] px-5 py-12 text-center xl:px-10">
+      <h3 class="mb-4 font-semibold text-gray-800 text-theme-xl dark:text-white/90">
+        No Orders Found
+      </h3>
+    </div>
+    } @else {
+    <div class="overflow-hidden">
+      <div class="max-w-full overflow-x-auto">
+        <table class="min-w-full">
+          <!-- Table Header -->
+          <thead class="border-b border-gray-100 dark:border-white/[0.05]">
+            <tr>
+              <th
+                class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Buyer name
+              </th>
+              <th
+                class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Status
+              </th>
+              <th
+                class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Total
+              </th>
+              <th
+                class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Order Date
+              </th>
+              <th
+                class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <!-- Table Body -->
+          <tbody class="divide-y divide-gray-100 dark:divide-white/[0.05]">
+            @for (order of orders; track order._id) {
+            <tr
+              class="hover:bg-gray-50 transition-colors dark:hover:bg-white/[0.02]"
+            >
+              <td
+                class="px-5 py-4 sm:px-6 text-start text-gray-800 dark:text-white/90"
+              >
+                <span class="font-medium">{{ order.owner.last_name }} {{ order.owner.first_name }}</span>
+              </td>
+              <td
+                class="px-5 py-4 sm:px-6 text-start text-gray-600 dark:text-gray-400"
+              >
+                <span class="line-clamp-1">{{ order.status }}</span>
+              </td>
+              <td
+                class="px-5 py-4 sm:px-6 text-start font-semibold text-gray-800 dark:text-white/90"
+              >
+                {{ order.total | number : '1.2-2' }} Ariary
+              </td>
+              <td
+                class="px-5 py-4 sm:px-6 text-start text-gray-600 dark:text-gray-400"
+              >
+                {{ order.orderDate | date : 'short' }}
+              </td>
+              <td class="px-5 py-4 sm:px-6 text-start">
+                <div class="flex items-center gap-2">
+
+                  <!-- Details Button -->
+                  <button
+                    (click)="openDetailsModal(order)"
+                    class="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium
+                          bg-gradient-to-r from-blue-500 to-blue-600 text-white
+                          hover:from-blue-600 hover:to-blue-700
+                          shadow-md hover:shadow-lg
+                          transition-all duration-300 transform hover:-translate-y-0.5"
+                  >
+                    <!-- Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12H9m12 0A9 9 0 1112 3a9 9 0 019 9z" />
+                    </svg>
+                    Détails
+                  </button>
+
+                  <!-- Invoice Button -->
+                  <button
+                    class="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium
+                          bg-gradient-to-r from-violet-600 to-violet-600 text-white
+                          hover:from-violet-600 hover:to-violet-700
+                          shadow-md hover:shadow-lg
+                          transition-all duration-300 transform hover:-translate-y-0.5"
+                  >
+                    <!-- Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12h6m-6 4h6M7 4h10l2 2v14H5V4h2z" />
+                    </svg>
+                    Invoice
+                  </button>
+
+                </div>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- Showin Details -->
+  <app-order-details-modal ></app-order-details-modal>
+
+  <!-- Confirm Dialog Component -->
+  <app-confirm-dialog></app-confirm-dialog>
 </div>

@@ -92,7 +92,9 @@
   <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
 
     @for (item of filteredItems; track item._id) {
-      <app-item-card [item]="item"
+      <app-item-card 
+        [item]="item"
+        (cartUpdated) = "loadOrder()"
       ></app-item-card>
     }
 
@@ -101,9 +103,62 @@
 
   <!-- Floating Cart Button -->
   <button
+    (click)="toggleCart()"
     class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white shadow-2xl rounded-full w-14 h-14 flex items-center justify-center text-xl transition duration-300"
   >
     🛒
   </button>
+
+  <!-- Cart focus -->
+  <div
+    *ngIf="showCart"
+    class="fixed bottom-0 right-0 w-full max-w-md h-[80vh] bg-white dark:bg-gray-900 shadow-2xl rounded-t-3xl overflow-y-auto p-5 flex flex-col gap-4 transition-transform"
+  >
+    <h4 class="text-lg font-semibold text-gray-800 dark:text-white/90">Your Cart</h4>
+
+    <div *ngIf="details.length === 0" class="text-gray-500 dark:text-gray-400">
+      Your cart is empty
+    </div>
+
+    <!-- Liste des items -->
+    <div *ngFor="let item of details; let i = index" class="flex items-center justify-between gap-3 border-b py-2">
+      <div class="flex items-center gap-3">
+        <img [src]="getImageUrl(item.item)" class="w-12 h-12 rounded-lg object-cover" />
+        <div>
+          <p class="text-sm font-medium text-gray-800 dark:text-white">{{ item.item.name }}</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">{{ item.item.price | currency:'':'':'1.0-0':'en-US' }} Ar</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button class="px-2 bg-gray-200 rounded" (click)="decreaseQuantity(i)">-</button>
+        <span>{{ item.quantity }}</span>
+        <button class="px-2 bg-gray-200 rounded" (click)="increaseQuantity(i)">+</button>
+      </div>
+
+      <div class="font-medium text-gray-800 dark:text-white">
+        {{ item.subTotal | currency:'':'':'1.0-0':'en-US' }} Ar
+      </div>
+    </div>
+
+    <!-- Total -->
+    <div class="flex justify-between font-semibold text-gray-800 dark:text-white mt-4">
+      <span>Total:</span>
+      <span>{{ order.total| currency:'':'':'1.0-0':'en-US' }} Ar</span>
+    </div>
+
+    <button
+      class="mt-4 w-full py-2 rounded-xl bg-green-600 text-white font-medium hover:bg-green-700 transition"
+      (click)="payItems()"
+      [disabled]="details.length === 0"
+    >
+      {{ upToDate? "Pay my Items": "Update" }}
+    </button>
+    <button
+      class="mt-4 w-full py-2 rounded-xl bg-gray-300 text-white font-medium hover:bg-gray-500 transition"
+      (click)="toggleCart()"
+    >Cancel
+    </button>
+  </div>
 
 </div>

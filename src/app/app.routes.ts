@@ -100,6 +100,7 @@ export const routes: Routes = [
         component: ProfileComponent,
         title:
           "Angular Profile Dashboard | TailAdmin - Angular Admin Dashboard Template",
+        data: { roles: ['buyer', 'admin', 'store'] }
       },
       {
         path: "form-elements",

@@ -4,46 +4,105 @@ import { ModalService } from '../../../services/modal.service';
 
 import { ModalComponent } from '../../ui/modal/modal.component';
 import { ButtonComponent } from '../../ui/button/button.component';
+import { FileInputComponent } from "../../form/input/file-input.component";
+import { LabelComponent } from "../../form/label/label.component";
+
+import { User, UserService } from '../../../services/user.service';
+import { environment } from "../../../../../environments/environment";
+import { FormsModule } from '@angular/forms';
+
+
 
 @Component({
   selector: 'app-user-meta-card',
   imports: [
     ModalComponent,
     InputFieldComponent,
-    ButtonComponent
+    FormsModule,
+    ButtonComponent,
+    FileInputComponent,
+    LabelComponent
 ],
   templateUrl: './user-meta-card.component.html',
   styles: ``
 })
 export class UserMetaCardComponent {
+  user!: User;
 
-  constructor(public modal: ModalService) {}
+  selectedFile?: File;
+  previewUrl?: string | null = null;
 
-  isOpen = false;
-  openModal() { this.isOpen = true; }
-  closeModal() { this.isOpen = false; }
-
-  // Example user data (could be made dynamic)
-  user = {
-    firstName: 'Musharof',
-    lastName: 'Chowdhury',
-    role: 'Team Manager',
-    location: 'Arizona, United States',
-    avatar: '/images/user/owner.jpg',
-    social: {
-      facebook: 'https://www.facebook.com/PimjoHQ',
-      x: 'https://x.com/PimjoHQ',
-      linkedin: 'https://www.linkedin.com/company/pimjo',
-      instagram: 'https://instagram.com/PimjoHQ',
-    },
-    email: 'randomuser@pimjo.com',
-    phone: '+09 363 398 46',
-    bio: 'Team Manager',
+  userFormData: User = {
+    email: '',
+    last_name: '',
+    first_name: '',
+    pdp_url: '',
+    phone: '',
+    adress: '',
   };
 
+  constructor(public modal: ModalService, private userService: UserService) {
+
+  }
+
+  ngOnInit() {
+    this.userService.currentUser$.subscribe(user => {
+      this.user = user || {};
+    }); 
+  }
+
+  isOpen = false;
+  openModal() { 
+    this.isOpen = true; 
+    this.userFormData = {
+      email: this.user.email,
+      last_name: this.user.last_name,
+      first_name: this.user.first_name,
+      pdp_url: this.user.pdp_url,
+      phone: this.user.phone,
+      adress: this.user.adress,
+    }
+  }
+  closeModal() { this.isOpen = false; }
+
+  getImageUrl(user: any): string {
+    if (user.pdp_url) {
+      return environment.apiBaseUrl.replace(/\/?api\/?/, '') + user.pdp_url;
+    } else {
+      return 'assets/placeholder.png'; // Path to your placeholder image
+    }
+  }
+  
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      // revoke previous preview
+      if (this.previewUrl) {
+        URL.revokeObjectURL(this.previewUrl);
+      }
+      this.selectedFile = input.files[0];
+      this.previewUrl = URL.createObjectURL(this.selectedFile);
+    } else {
+      if (this.previewUrl) {
+        URL.revokeObjectURL(this.previewUrl);
+      }
+      this.selectedFile = undefined;
+      this.previewUrl = null;
+    }
+  }
+
+
   handleSave() {
-    // Handle save logic here
-    console.log('Saving changes...');
-    this.modal.closeModal();
+    if (this.user._id)
+    {
+      this.userService.updateUser(this.user._id, this.userFormData, this.selectedFile).subscribe({
+        next: (updatedUser) => {
+          console.log('User updated', updatedUser);
+          this.user = updatedUser;
+          this.closeModal();
+        },
+        error: (err) => console.error('Error updating user', err)
+      });
+    }
   }
 }

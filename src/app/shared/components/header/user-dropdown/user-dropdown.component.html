@@ -6,7 +6,7 @@
     <span class="mr-3 overflow-hidden rounded-full h-11 w-11">
       <img src="{{getImageUrl(user)}}" alt="User" />
     </span>
-    <span class="block mr-1 font-medium text-theme-sm">{{user?.first_name}}</span>
+    <span class="block mr-1 font-medium text-theme-sm">{{user.first_name}}</span>
     <svg
       [ngClass]="{
         'stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200': true,
@@ -37,10 +37,10 @@
       <span
         class="block font-medium text-gray-700 text-theme-sm dark:text-gray-400"
       >
-        {{user?.first_name}} {{user?.last_name}}
+        {{user.first_name}} {{user.last_name}}
       </span>
       <span class="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-        {{user?.email}}
+        {{user.email}}
       </span>
     </div>
 

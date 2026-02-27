@@ -36,6 +36,7 @@
         id="type"
         name="type"
         [(ngModel)]="selectedStockType"
+        (change)="loadStocks()"
         class="w-full h-11 rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-transparent text-gray-800 focus:outline-hidden focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
       >
         <option value="" disabled>Sélectionnez le type de mouvement</option>
@@ -48,6 +49,7 @@
         id="item"
         name="item"
         [(ngModel)]="selectedItem"
+        (change)="loadStocks()"
         class="w-full h-11 rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-transparent text-gray-800 focus:outline-hidden focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
       >
         <option value="" disabled>Sélectionnez l'item</option>

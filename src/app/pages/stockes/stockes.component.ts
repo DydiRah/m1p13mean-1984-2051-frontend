@@ -65,11 +65,12 @@ export class StockesComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadStocks();
   }
 
+
   loadStocks() {
     this.isLoading = true;
     this.error = null;    
     this.stockMovementService
-    .getStockMovements()
+    .getStockMovements(this.selectedStockType, this.selectedItem)
     .pipe(takeUntil(this.destroy$))
     .subscribe({
       next: (stocks) => {
@@ -82,7 +83,6 @@ export class StockesComponent implements OnInit, OnDestroy, AfterViewInit {
       },
     });
   }
-
 
   openAddModal() {
     this.formModal.resetForm();

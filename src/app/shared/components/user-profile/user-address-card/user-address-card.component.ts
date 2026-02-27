@@ -6,6 +6,11 @@ import { ButtonComponent } from '../../ui/button/button.component';
 import { LabelComponent } from '../../form/label/label.component';
 import { ModalComponent } from '../../ui/modal/modal.component';
 import { FormsModule } from '@angular/forms';
+import { Store, StoresService } from '../../../services/stores.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
+import { UserService, User } from '../../../services/user.service';
+
 
 @Component({
   selector: 'app-user-address-card',
@@ -20,23 +25,67 @@ import { FormsModule } from '@angular/forms';
   styles: ``
 })
 export class UserAddressCardComponent {
+  private destroy$ = new Subject<void>();
+  user: User = {};
+  store: Store = {
+  } as Store;
 
-  constructor(public modal: ModalService) {}
-
-  isOpen = false;
-  openModal() { this.isOpen = true; }
-  closeModal() { this.isOpen = false; }
-
-  address = {
-    country: 'United States.',
-    cityState: 'Phoenix, Arizona, United States.',
-    postalCode: 'ERT 2489',
-    taxId: 'AS4568384',
+  storeForm: Store = {
+    name: '',
+    description: '',
+    manager: ''
   };
 
+  constructor(public modal: ModalService, private storesService: StoresService, private userService: UserService) {
+
+  }
+
+  ngOnInit(){
+    this.loadStore();
+    this.userService.currentUser$.subscribe(user => {
+      this.user = user || {};
+    }); 
+  }
+
+  loadStore(){
+    this.storesService.getStores()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          this.store = data[0];
+        },
+        error: (err) => {
+          console.error('Erreur chargement categories', err);
+        }
+      });
+  }
+
+  isOpen = false;
+  openModal() { 
+    this.isOpen = true;
+    this.storeForm = {
+      name: this.store?.name,
+      description: this.store?.description,
+      manager: this.user
+    }
+  }
+
+  closeModal() { this.isOpen = false; }
+
+
   handleSave() {
-    // Handle save logic here
-    console.log('Saving changes...');
-    this.modal.closeModal();
+    if (!this.store._id) return;
+
+    this.storesService.updateStore(this.store._id, this.storeForm)
+      .subscribe({
+        next: (updatedStore) => {
+          this.store = updatedStore;                  // Met à jour le store local
+          this.loadStore();                           // Recharge les données si besoin
+          this.closeModal();                          // Ferme le modal
+        },
+        error: (err) => {
+          console.error("Error updating store:", err);
+        }
+      });
   }
 }

@@ -25,7 +25,6 @@ export class CategoriesService {
 
     if (token) {
       headers = headers.set('Authorization', `Bearer ${token}`);
-      console.log('Token envoyé:', `Bearer ${token.substring(0, 20)}...`);
     } else {
       console.warn('Aucun token trouvé dans localStorage');
     }

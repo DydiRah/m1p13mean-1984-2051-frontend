@@ -36,7 +36,6 @@ export class ItemFormModalComponent implements OnInit, OnDestroy {
   error: string | null = null;
   success: string | null = null;
   categories: Category[] = [];
-  stores: Store[] = [];
   form = {
     _id: '' as string | undefined,
     name: '',
@@ -54,8 +53,7 @@ export class ItemFormModalComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: ModalService,
     private itemsService: ItemsService,
-    private categoriesService: CategoriesService,
-    private storesService: StoresService
+    private categoriesService: CategoriesService
   ) {
     this.isOpen$ = this.modalService.isOpen$;
   }
@@ -69,16 +67,6 @@ export class ItemFormModalComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           console.error('Erreur chargement categories', err);
-        }
-      });
-    this.storesService.getStores()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (data) => {
-          this.stores = data;
-        },
-        error: (err) => {
-          console.error('Erreur chargement stores', err);
         }
       });
   }

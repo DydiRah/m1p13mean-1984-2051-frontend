@@ -32,7 +32,6 @@ export class StockMovementService {
 
         if (token) {
         headers = headers.set('Authorization', `Bearer ${token}`);
-        console.log('Token envoyé:', `Bearer ${token.substring(0, 20)}...`);
         } else {
         console.warn('Aucun token trouvé dans localStorage');
         }
@@ -41,9 +40,14 @@ export class StockMovementService {
     }
 
     // Get all stock movements
-    getStockMovements(): Observable<StockMovement[]> {
+    getStockMovements(type: string, item_id?: string): Observable<StockMovement[]> {
+        let url = `${this.stockMovementUrl}`;
+        const params: any = {};
+        if (type) params.type = type;
+        if (item_id) params.item_id = item_id;
+
         return this.http.get<{ success: boolean; stockMovements: StockMovement[] }>(
-            `${this.stockMovementUrl}`, { headers: this.getHeaders() }
+            `${this.stockMovementUrl}`, { headers: this.getHeaders(), params }
         ).pipe(
             map(response => response.stockMovements)
         );

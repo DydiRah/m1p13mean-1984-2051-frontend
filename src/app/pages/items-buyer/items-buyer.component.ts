@@ -8,12 +8,12 @@ import { takeUntil } from 'rxjs/operators';
 import { PageBreadcrumbComponent } from '../../shared/components/common/page-breadcrumb/page-breadcrumb.component';
 import { ConfirmDialogComponent } from '../../shared/components/common/confirm-dialog/confirm-dialog.component';
 import { ItemFormModalComponent } from '../../shared/components/form/item-form-modal/item-form-modal.component';
-import { BadgeComponent } from '../../shared/components/ui/badge/badge.component';
 import { ItemCardComponent } from '../../shared/components/cards/cards-items/item-card.component';
 
 import { ModalService } from '../../shared/services/modal.service';
 import { ItemsService, Item } from '../../shared/services/items.service';
 import { environment } from '../../../environments/environment';
+import { Order, OrderService } from '../../shared/services/order.service';
 
 @Component({
   selector: 'app-items-buyer',
@@ -23,14 +23,13 @@ import { environment } from '../../../environments/environment';
     HttpClientModule,
     FormsModule, // ✅ important for ngModel
     PageBreadcrumbComponent,
-    ItemFormModalComponent,
-    ConfirmDialogComponent,
     ItemCardComponent,
-    BadgeComponent,
   ],
   templateUrl: 'items-buyer.component.html',
 })
 export class ItemsBuyerComponent implements OnInit, OnDestroy, AfterViewInit {
+  showCart = false;
+  upToDate = true;
 
   @ViewChild(ItemFormModalComponent) formModal!: ItemFormModalComponent;
   @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
@@ -42,6 +41,8 @@ export class ItemsBuyerComponent implements OnInit, OnDestroy, AfterViewInit {
   filteredItems: Item[] = [];
 
   categories: string[] = [];
+  order!: Order;
+  details: any[] = [];
 
   // UI States
   isLoading = false;
@@ -58,15 +59,17 @@ export class ItemsBuyerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private itemsService: ItemsService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private orderService: OrderService
   ) {}
 
   ngOnInit() {
     this.loadItems();
+    this.loadOrder();
   }
 
   // ===============================
-  // LOAD ITEMS
+  // LOAD ITEMS and ORDER
   // ===============================
 
   loadItems() {
@@ -88,6 +91,18 @@ export class ItemsBuyerComponent implements OnInit, OnDestroy, AfterViewInit {
           this.isLoading = false;
         },
       });
+  }
+
+  loadOrder(){
+    this.orderService.getOrders().pipe().subscribe({
+      next: (orders) => {
+        if(orders.length > 0) this.order = orders[0];
+        if(orders.length > 0) this.details = orders[0].items;
+      },
+      error: (err) => {
+          this.error = err.message || 'Failed to load products';
+      }
+    });
   }
 
   // ===============================
@@ -172,4 +187,57 @@ export class ItemsBuyerComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  // MOVE CART
+  toggleCart() {
+    if(this.details.length <= 0) this.showCart = false;
+    else this.showCart = !this.showCart;
+  }
+
+
+
+  increaseQuantity(index: number) {
+    if (this.details[index].quantity < 99) { // max quantity
+      this.details[index].quantity++;
+      this.upToDate = false;
+    }
+  }
+
+  decreaseQuantity(index: number) {
+    if (this.details[index].quantity > 1) {
+      this.details[index].quantity--;
+      this.upToDate = false;
+    }
+  }
+
+
+  updateCartItem() {
+    this.orderService.addToCart(this.details)
+      .subscribe({
+        next: (data) => {  
+          this.upToDate = true;
+          this.loadOrder();
+        },
+        error: (err) => {
+          console.error("Error updating store:", err);
+        }
+      });
+  }
+
+  payItems() {
+    if (!this.upToDate){
+      this.updateCartItem();
+    }else{
+
+    }
+  }
+
+
+
 }
+
+
+
+
+
+
