@@ -1,12 +1,14 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PageBreadcrumbComponent } from '../../shared/components/common/page-breadcrumb/page-breadcrumb.component';
 import { ConfirmDialogComponent } from '../../shared/components/common/confirm-dialog/confirm-dialog.component';
 import { BoxFormModalComponent } from '../../shared/components/form/box-form-modal/box-form-modal.component';
 import { ButtonComponent } from '../../shared/components/ui/button/button.component';
+import { TableDropdownComponent } from '../../shared/components/common/table-dropdown/table-dropdown.component';
 import { ModalService } from '../../shared/services/modal.service';
 import { BoxesService, Box } from '../../shared/services/box.service';
 
@@ -20,6 +22,7 @@ import { BoxesService, Box } from '../../shared/services/box.service';
     BoxFormModalComponent,
     ConfirmDialogComponent,
     ButtonComponent,
+    TableDropdownComponent,
   ],
   templateUrl: './boxes.component.html',
   styles: ``,
@@ -37,7 +40,8 @@ export class BoxesComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private boxesService: BoxesService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -60,6 +64,12 @@ export class BoxesComponent implements OnInit, OnDestroy, AfterViewInit {
         this.isLoading = false;
       },
     });
+  }
+
+  goToContracts(boxId?: string) {
+    if (!boxId) return;
+
+    this.router.navigate(['/contract', boxId]);
   }
 
   openAddModal() {

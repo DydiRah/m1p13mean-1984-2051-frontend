@@ -1,0 +1,87 @@
+<div class="fixed inset-0 z-100 flex items-center justify-center" [class.hidden]="!(isOpen$ | async)">
+
+  <div class="absolute inset-0 bg-black/50" (click)="closeModal()"></div>
+
+  <div class="relative z-10 w-full max-w-md rounded-lg bg-white p-6 dark:bg-gray-800">
+
+    <div class="mb-4 flex items-center justify-between">
+      <h2 class="text-lg font-semibold text-gray-800 dark:text-white">
+        {{ isEditMode ? 'Edit Store' : 'Add New Store' }}
+      </h2>
+      <button (click)="closeModal()" class="text-gray-400 hover:text-gray-600">
+        ✕
+      </button>
+    </div>
+
+    @if (error) {
+      <div class="mb-4 bg-red-50 p-3 text-sm text-red-600 rounded">
+        {{ error }}
+      </div>
+    }
+
+    @if (success) {
+      <div class="mb-4 bg-green-50 p-3 text-sm text-green-600 rounded">
+        {{ success }}
+      </div>
+    }
+
+    <form (ngSubmit)="onSubmit()" class="space-y-4">
+
+      <!-- Name -->
+      <div>
+        <app-label for="name">Store Name</app-label>
+        <app-input-field
+          id="name"
+          name="name"
+          type="text"
+          [(ngModel)]="form.name"
+          required
+        />
+      </div>
+
+      <!-- Description -->
+      <div>
+        <app-label for="description">Description</app-label>
+        <app-input-field
+          id="description"
+          name="description"
+          type="text"
+          [(ngModel)]="form.description"
+        />
+      </div>
+
+      <!-- Manager -->
+      <div>
+        <app-label for="manager">Manager</app-label>
+        <select
+          id="manager"
+          name="manager"
+          [(ngModel)]="form.manager"
+          class="w-full h-11 rounded-lg border px-4 text-sm"
+        >
+          <option [ngValue]="null">Select manager</option>
+          @for (user of managers; track user._id) {
+            <option [value]="user._id">
+              {{ user.first_name }} {{ user.last_name }}
+            </option>
+          }
+        </select>
+      </div>
+
+      <div class="flex gap-3 mt-6">
+        <app-button variant="outline" (btnClick)="closeModal()">
+          Cancel
+        </app-button>
+
+        <button
+          type="submit"
+          [disabled]="isLoading"
+          class="rounded-lg bg-brand-500 px-5 py-3 text-white"
+        >
+          {{ isLoading ? 'Saving...' : isEditMode ? 'Update' : 'Create' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

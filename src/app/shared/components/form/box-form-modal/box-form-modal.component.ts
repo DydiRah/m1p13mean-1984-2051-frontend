@@ -40,7 +40,7 @@ export class BoxFormModalComponent implements OnInit, OnDestroy {
     _id: '' as string | undefined,
     size: 0 as number,
     price: 0 as number | null,
-    status: null as 'available' | 'occupied' | null,
+    status: 'available' as 'available' | 'occupied', 
     shopping_center: '' as string | null,
     price_history: [] as number[]
   };
@@ -79,7 +79,7 @@ export class BoxFormModalComponent implements OnInit, OnDestroy {
       _id: '',
       size: 0,
       price: 0,
-      status: null,
+      status: 'available', // 🔥 toujours available à la création
       shopping_center: null,
       price_history: []
     };
@@ -98,7 +98,7 @@ export class BoxFormModalComponent implements OnInit, OnDestroy {
         _id: box._id,
         size: box.size,
         price: box.price,
-        status: box.status,
+        status: box.status, 
         shopping_center: box.shopping_center,
         price_history: box.price_history || []
       };
@@ -120,12 +120,7 @@ export class BoxFormModalComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    if (!this.form.status) {
-      this.error = 'Status is required';
-      return false;
-    }
-
-    return true;
+    return true; 
   }
 
   // Submit
@@ -141,7 +136,9 @@ export class BoxFormModalComponent implements OnInit, OnDestroy {
     const boxData: Box = {
       size: this.form.size,
       price: this.form.price!,
-      status: this.form.status!,
+      status: this.isEditMode
+        ? this.form.status   
+        : 'available',       
       shopping_center: this.form.shopping_center,
       price_history: this.form.price_history
     };

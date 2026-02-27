@@ -19,10 +19,12 @@ import { SignInComponent } from "./pages/auth-pages/sign-in/sign-in.component";
 import { SignUpComponent } from "./pages/auth-pages/sign-up/sign-up.component";
 import { CalenderComponent } from "./pages/calender/calender.component";
 import { BoxesComponent } from "./pages/boxes/boxes.component";
+import { StoresComponent } from "./pages/stores/stores.component";
 import { StockesComponent } from "./pages/stockes/stockes.component";
 import { ItemsComponent } from "./pages/items/items.component";
 import { ItemsBuyerComponent } from "./pages/items-buyer/items-buyer.component";
 import { OrdersComponent } from "./pages/orders/orders.component";
+import { ContractComponent } from "./pages/contract/contract.component";
 import { roleGuard } from "./guards/role.guard";
 
 export const routes: Routes = [
@@ -38,6 +40,19 @@ export const routes: Routes = [
         title:
           "Angular Ecommerce Dashboard | TailAdmin - Angular Admin Dashboard Template",
         data: { roles: ['admin', 'store'] }
+      },
+      {
+        path: "stores",
+        component: StoresComponent,
+        title:
+          "Angular Boxes | TailAdmin - Angular Admin Dashboard Template",
+        data: { roles: ['admin', 'store'] }
+      },
+      {
+        path: "contract/:boxId",
+        component: ContractComponent,
+        title: "Angular Boxes | TailAdmin - Angular Admin Dashboard Template",
+        data: { roles: ['admin'] }
       },
       {
         path: "boxes",
