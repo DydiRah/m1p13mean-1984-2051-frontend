@@ -21,6 +21,7 @@ import { CalenderComponent } from "./pages/calender/calender.component";
 import { BoxesComponent } from "./pages/boxes/boxes.component";
 import { StockesComponent } from "./pages/stockes/stockes.component";
 import { ItemsComponent } from "./pages/items/items.component";
+import { ItemsBuyerComponent } from "./pages/items-buyer/items-buyer.component";
 import { OrdersComponent } from "./pages/orders/orders.component";
 import { roleGuard } from "./guards/role.guard";
 
@@ -65,6 +66,13 @@ export const routes: Routes = [
         title:
           "Angular Orders | TailAdmin - Angular Admin Dashboard Template",
         data: { roles: ['store', 'buyer'] }
+      },
+      {
+        path: "all-items",
+        component: ItemsBuyerComponent,
+        title:
+          "Items",
+        data: { roles: ['buyer'] }
       },
       {
         path: "calendar",

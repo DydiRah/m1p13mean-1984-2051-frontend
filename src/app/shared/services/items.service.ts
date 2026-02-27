@@ -5,6 +5,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Category } from './categories.service';
 import { Store } from './stores.service';
+import { StockMovement } from './stockMovement.service';
 
 export interface Item {
   _id?: string;
@@ -13,11 +14,10 @@ export interface Item {
   price: string | number;
   image_url?: string;
   quantity: number;
-  type_stock?: 'LIFO' | 'FIFO';
   category_id: Category | string;
-  store_id: Store | string;
   category?: Category;
   store?: Store;
+  stock?: StockMovement;
 }
 
 @Injectable({
@@ -68,10 +68,6 @@ export class ItemsService {
     form.append('price', String(item.price));
     form.append('quantity', String(item.quantity));
     form.append('category', typeof item.category_id === 'string' ? item.category_id : item.category_id._id || '');
-    form.append('store', typeof item.store_id === 'string' ? item.store_id : item.store_id._id || '');
-    if (item.type_stock) {
-      form.append('type_stock', item.type_stock);
-    }
     if (photo) {
       form.append('photo', photo);
     }    
@@ -102,12 +98,9 @@ export class ItemsService {
     form.append('name', item.name);
     form.append('description', item.description);
     form.append('category', typeof item.category_id === 'string' ? item.category_id : item.category_id._id || '');
-    form.append('store', typeof item.store_id === 'string' ? item.store_id : item.store_id._id || '');
     form.append('price', String(item.price));
     form.append('quantity', String(item.quantity));
-    if (item.type_stock) {
-      form.append('type_stock', item.type_stock);
-    }
+
     if (photo) {
       form.append('photo', photo, photo.name);
     }

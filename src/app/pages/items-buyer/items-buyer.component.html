@@ -1,0 +1,113 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+
+  <!-- Breadcrumb -->
+  <app-page-breadcrumb pageTitle="Shop" />
+
+  <!-- Success Message -->
+  @if (success) {
+  <div class="mb-6 rounded-xl bg-green-50 p-4 text-sm text-green-700">
+    {{ success }}
+  </div>
+  }
+
+  <!-- Error Message -->
+  @if (error) {
+  <div class="mb-6 rounded-xl bg-red-50 p-4 text-sm text-red-700">
+    {{ error }}
+  </div>
+  }
+
+  <!-- Header + Filters -->
+  <div class="bg-white shadow-sm border border-gray-200 rounded-2xl p-6 mb-8">
+
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+
+      <div>
+        <h1 class="text-3xl font-bold text-gray-800">All Products</h1>
+        <p class="text-gray-500 mt-1">Browse and manage your shop items</p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+
+        <!-- Search -->
+        <div class="relative w-full sm:w-72">
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            placeholder="Search products..."
+            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <span class="absolute left-3 top-2.5 text-gray-400">🔍</span>
+        </div>
+
+        <!-- Category Filter -->
+        <select
+          [(ngModel)]="selectedCategory"
+          (ngModelChange)="applyFilters()"
+          class="rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">All Categories</option>
+        </select>
+
+        <!-- Sort -->
+        <select
+          [(ngModel)]="sortOption"
+          (ngModelChange)="applyFilters()"
+          class="rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Sort By</option>
+          <option value="priceAsc">Price: Low to High</option>
+          <option value="priceDesc">Price: High to Low</option>
+        </select>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading) {
+  <div class="flex items-center justify-center py-20">
+    <div class="text-center">
+      <div class="mb-4 h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
+      <p class="text-gray-600">Loading products...</p>
+    </div>
+  </div>
+  }
+
+  <!-- Empty State -->
+  @else if (items.length === 0) {
+  <div class="text-center py-20 bg-white rounded-2xl border border-gray-200">
+    <h3 class="text-xl font-semibold text-gray-800 mb-2">
+      No Products Found
+    </h3>
+    <p class="text-gray-500">
+      Try adjusting your filters or add a new product.
+    </p>
+  </div>
+  }
+
+  <!-- Products Grid -->
+  @else {
+  <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+
+    @for (item of filteredItems; track item._id) {
+      <app-item-card
+        [image]="getImageUrl(item)"
+        [name]="item.name"
+        [description]="item.description"
+        [price]="item.price"
+      ></app-item-card>
+    }
+
+  </div>
+  }
+
+  <!-- Floating Cart Button -->
+  <button
+    class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white shadow-2xl rounded-full w-14 h-14 flex items-center justify-center text-xl transition duration-300"
+  >
+    🛒
+  </button>
+
+</div>
