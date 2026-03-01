@@ -29,6 +29,7 @@ import { Order, OrderService } from '../../shared/services/order.service';
 })
 export class ItemsBuyerComponent implements OnInit, OnDestroy, AfterViewInit {
   showCart = false;
+  showPaymentMethods = false;
   upToDate = true;
 
   @ViewChild(ItemFormModalComponent) formModal!: ItemFormModalComponent;
@@ -43,6 +44,7 @@ export class ItemsBuyerComponent implements OnInit, OnDestroy, AfterViewInit {
   categories: string[] = [];
   order!: Order;
   details: any[] = [];
+  payementMethod: string = '';
 
   // UI States
   isLoading = false;
@@ -94,7 +96,7 @@ export class ItemsBuyerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   loadOrder(){
-    this.orderService.getOrders().pipe().subscribe({
+    this.orderService.getOrders('pending').pipe().subscribe({
       next: (orders) => {
         if(orders.length > 0) this.order = orders[0];
         if(orders.length > 0) this.details = orders[0].items;
@@ -210,16 +212,20 @@ export class ItemsBuyerComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-
   updateCartItem() {
-    this.orderService.addToCart(this.details)
+    const details: any[] = [];
+    this.details.map((detail) => {
+      details.push({ item: detail.item._id, quantity: detail.quantity });
+    });
+    this.orderService.addToCart(details)
       .subscribe({
-        next: (data) => {  
-          this.upToDate = true;
+        next: (data) => { 
           this.loadOrder();
+          this.upToDate = true;
         },
         error: (err) => {
-          console.error("Error updating store:", err);
+          console.error("Impossible to update store", err.error.message);
+          this.error = err.error.message;
         }
       });
   }
@@ -228,11 +234,31 @@ export class ItemsBuyerComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.upToDate){
       this.updateCartItem();
     }else{
-
+      this.showPaymentMethods = true;
     }
   }
 
+  closePaymentMethods() {
+    this.showPaymentMethods = false;
+  }
 
+  addPayementMethod(method: string){
+    this.payementMethod = method;
+    this.orderService.checkout(this.payementMethod)
+      .subscribe({
+        next: (data) => { 
+          this.closePaymentMethods();
+          this.toggleCart();
+          this.details = [];
+        },
+        error: (err) => {
+          console.error("Impossible to pay", err.error.message);
+          this.error = err.error.message;
+        }
+      });
+  }
+
+  
 
 }
 

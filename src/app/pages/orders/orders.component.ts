@@ -32,8 +32,7 @@ export class OrdersComponent implements OnInit, OnDestroy, AfterViewInit {
   private destroy$ = new Subject<void>();
 
   orders: Order[] = [];
-  selectedStockType: string = '';
-  selectedItem: string = '';
+  selectedStatut: string = '';
   items: any[] = [];
 
   isLoading = false;
@@ -46,7 +45,7 @@ export class OrdersComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    this.orderService.getOrders()
+    this.orderService.getOrders(this.selectedStatut)
     .pipe(takeUntil(this.destroy$))
     .subscribe({
       next: (data) => {
@@ -63,7 +62,7 @@ export class OrdersComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isLoading = true;
     this.error = null;    
     this.orderService
-    .getOrders()
+    .getOrders(this.selectedStatut)
     .pipe(takeUntil(this.destroy$))
     .subscribe({
       next: (orders) => {

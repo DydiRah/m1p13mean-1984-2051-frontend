@@ -54,18 +54,28 @@ export class OrderService {
     }
 
     // Get all orders
-    getOrders(): Observable<Order[]> {
+    getOrders(statut: string): Observable<Order[]> {
+        const params: any = {};
+        if (statut) params.statut = statut;
         return this.http.get<{ success: boolean; orders: Order[] }>(
-            `${this.orderUrl}`, { headers: this.getHeaders() }
+            `${this.orderUrl}`, { headers: this.getHeaders(), params }
         ).pipe(
             map(response => response.orders)
         );
     }
 
-    addToCart(details: any[]): Observable<Order> {
+    addToCart(details: any[]): Observable<Order> {        
         return this.http.post<Order>(
             `${this.orderUrl}/cart/add`,
             { items_details: details },        
+            { headers: this.getHeaders() }
+        );
+    }
+
+    checkout(paymentMethod: string): Observable<Order> {        
+        return this.http.post<Order>(
+            `${this.orderUrl}/checkout`,
+            { paymentMethod: paymentMethod },        
             { headers: this.getHeaders() }
         );
     }

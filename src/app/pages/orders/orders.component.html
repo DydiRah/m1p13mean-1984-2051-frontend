@@ -35,13 +35,14 @@
       <select
         id="type"
         name="type"
-        [(ngModel)]="selectedStockType"
+        [(ngModel)]="selectedStatut"
+        (change)="loadOrders()"
         class="w-full h-11 rounded-lg border border-gray-300 px-4 py-2.5 text-sm bg-transparent text-gray-800 focus:outline-hidden focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
       >
         <option value="" disabled>Sélectionnez le statut</option>
         <option value="pending">Pending</option>
         <option value="paid">Paid</option>
-        <option value="cancelled">Cancelled</option>
+        <option value="">All status</option>
       </select>
     </div>
   </div>
