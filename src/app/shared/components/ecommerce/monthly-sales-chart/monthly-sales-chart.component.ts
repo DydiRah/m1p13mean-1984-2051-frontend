@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { NgApexchartsModule, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexPlotOptions, ApexDataLabels, ApexStroke, ApexLegend, ApexYAxis, ApexGrid, ApexFill, ApexTooltip } from 'ng-apexcharts';
 import { DropdownComponent } from '../../ui/dropdown/dropdown.component';
 import { DropdownItemComponent } from '../../ui/dropdown/dropdown-item/dropdown-item.component';
+import { Order, OrderService } from '../../../services/order.service';
 
 @Component({
   selector: 'app-monthly-sales-chart',
@@ -64,7 +65,32 @@ export class MonthlySalesChartComponent {
   };
   public colors: string[] = ['#465fff'];
 
+  orders: Order[] = [];
+  
+  orderCount: number = 0;
+  itemCount: number = 0;
+  
+  
+  constructor(private orderService: OrderService){}
   isOpen = false;
+    ngOnInit(): void {
+    this.loadOrderCount();
+  }
+
+
+  loadOrderCount() {
+    // Suppose your backend returns the orders for the logged-in user
+    this.orderService.getOrders('').subscribe({
+      next: (orders) => {
+        this.orderCount = orders.length;
+        this.orders = orders;
+      },
+      error: (err) => {
+        console.error('Failed to load orders', err);
+        this.orderCount = 0;
+      }
+    });
+  }
 
   toggleDropdown() {
     this.isOpen = !this.isOpen;

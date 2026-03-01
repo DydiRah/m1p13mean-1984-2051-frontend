@@ -14,17 +14,22 @@ import { Notification, NotificationService } from '../../../services/notificatio
 export class NotificationDropdownComponent implements OnInit, OnDestroy {
   isOpen = false;
   notifying = true;
-  notifications!: Notification[];
+  notifications?: Notification[] = [];
   hasNew: boolean = false;
   private sub!: Subscription;
 
   constructor(private notificationService: NotificationService) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.notificationService.getNotifications().subscribe(notifs => {      
+      this.notifications = notifs;
+    }); 
     this.sub = this.notificationService.connect()
       .subscribe((notif: any) => {
         this.hasNew = true;
-        this.notifications.unshift(notif);
+        if (this.notifications) {
+          this.notifications.unshift(notif);
+        }
       });
   }
 
@@ -35,6 +40,8 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   toggleDropdown() {
     this.isOpen = !this.isOpen;
     this.notifying = false;
+
+    this.notificationService.viewAll().subscribe((notifs) => this.notifications = notifs);
   }
 
   closeDropdown() {

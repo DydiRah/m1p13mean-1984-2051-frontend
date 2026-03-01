@@ -15,6 +15,7 @@ import { ItemsBuyerComponent } from "./pages/items-buyer/items-buyer.component";
 import { OrdersComponent } from "./pages/orders/orders.component";
 import { ContractComponent } from "./pages/contract/contract.component";
 import { roleGuard } from "./guards/role.guard";
+import { WelcomeComponent } from "./pages/welcome/welcome.component";
 
 export const routes: Routes = [
   {
@@ -34,7 +35,7 @@ export const routes: Routes = [
         pathMatch: "full",
         title:
           "Dashboard - Vendeo",
-        data: { roles: ['admin', 'store', 'buyer'] }
+        data: { roles: ['admin', 'store'] }
       },
       {
         path: "stores",
@@ -68,14 +69,14 @@ export const routes: Routes = [
         component: ItemsComponent,
         title:
           "Items - Vendeo",
-        data: { roles: ['store', 'buyer'] }
+        data: { roles: ['store'] }
       },
       {
         path: "orders",
         component: OrdersComponent,
         title:
           "Orders - Vendeo",
-        data: { roles: ['store', 'buyer'] }
+        data: { roles: ['admin','store', 'buyer'] }
       },
       {
         path: "all-items",
@@ -96,6 +97,13 @@ export const routes: Routes = [
         component: InvoicesComponent,
         title:
           "Invoice - Vendeo",
+      },
+      {
+        path: "welcome",
+        component: WelcomeComponent,
+        title:
+          "Welcome - Vendeo",
+        data: { roles: ['buyer'] }
       },
     ],
   },

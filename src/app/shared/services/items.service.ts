@@ -42,9 +42,13 @@ export class ItemsService {
   }
 
   // Get all items
-  getItems(): Observable<Item[]> {
+  getItems(search: string = '', category_id:string= ''): Observable<Item[]> {
+    const params:any = {};
+    if(search !== '') params.search = search;
+    if(category_id !== '') params.category_id = category_id;
+
     return this.http.get<Item[]>(this.itemsUrl, {
-      headers: this.getHeaders()
+      headers: this.getHeaders(), params
     }).pipe(
       catchError(this.handleError)
     );

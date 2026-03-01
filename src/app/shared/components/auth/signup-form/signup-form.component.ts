@@ -1,7 +1,6 @@
 import { Component, OnDestroy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { LabelComponent } from "../../form/label/label.component";
-import { CheckboxComponent } from "../../form/input/checkbox.component";
 import { InputFieldComponent } from "../../form/input/input-field.component";
 import { FileInputComponent } from "../../form/input/file-input.component";
 import { Router, RouterModule } from "@angular/router";
@@ -18,7 +17,6 @@ import { environment } from "../../../../../environments/environment";
   imports: [
     CommonModule,
     LabelComponent,
-    CheckboxComponent,
     InputFieldComponent,
     FileInputComponent,
     RouterModule,

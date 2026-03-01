@@ -34,6 +34,7 @@
           <input
             type="text"
             [(ngModel)]="searchTerm"
+            (blur)="loadItems()"
             placeholder="Search products..."
             class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -43,23 +44,12 @@
         <!-- Category Filter -->
         <select
           [(ngModel)]="selectedCategory"
-          (ngModelChange)="applyFilters()"
+          (ngModelChange)="loadItems()"
           class="rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <option value="">All Categories</option>
+          <option value="" >All Categories</option>
+          <option value="{{cat._id}}" *ngFor="let cat of categories;">{{ cat.name }}</option>
         </select>
-
-        <!-- Sort -->
-        <select
-          [(ngModel)]="sortOption"
-          (ngModelChange)="applyFilters()"
-          class="rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">Sort By</option>
-          <option value="priceAsc">Price: Low to High</option>
-          <option value="priceDesc">Price: High to Low</option>
-        </select>
-
       </div>
 
     </div>
@@ -91,7 +81,7 @@
   @else {
   <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
 
-    @for (item of filteredItems; track item._id) {
+    @for (item of items; track item._id) {
       <app-item-card 
         [item]="item"
         (cartUpdated) = "loadOrder()"

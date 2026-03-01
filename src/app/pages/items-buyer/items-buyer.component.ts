@@ -14,6 +14,7 @@ import { ModalService } from '../../shared/services/modal.service';
 import { ItemsService, Item } from '../../shared/services/items.service';
 import { environment } from '../../../environments/environment';
 import { Order, OrderService } from '../../shared/services/order.service';
+import { CategoriesService, Category } from '../../shared/services/categories.service';
 
 @Component({
   selector: 'app-items-buyer',
@@ -41,7 +42,7 @@ export class ItemsBuyerComponent implements OnInit, OnDestroy, AfterViewInit {
   items: Item[] = [];
   filteredItems: Item[] = [];
 
-  categories: string[] = [];
+  categories: Category[] = [];
   order!: Order;
   details: any[] = [];
   payementMethod: string = '';
@@ -54,7 +55,6 @@ export class ItemsBuyerComponent implements OnInit, OnDestroy, AfterViewInit {
   // Filters
   searchTerm: string = '';
   selectedCategory: string = '';
-  sortOption: string = '';
 
   // Cart
   cartCount: number = 0;
@@ -62,12 +62,14 @@ export class ItemsBuyerComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private itemsService: ItemsService,
     private modalService: ModalService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private categoryService: CategoriesService
   ) {}
 
   ngOnInit() {
     this.loadItems();
     this.loadOrder();
+    this.loadCategories();
   }
 
   // ===============================
@@ -79,13 +81,11 @@ export class ItemsBuyerComponent implements OnInit, OnDestroy, AfterViewInit {
     this.error = null;
 
     this.itemsService
-      .getItems()
+      .getItems(this.searchTerm, this.selectedCategory)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (items) => {
           this.items = items;
-          this.extractCategories();
-          this.applyFilters();
           this.isLoading = false;
         },
         error: (err) => {
@@ -107,48 +107,15 @@ export class ItemsBuyerComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  // ===============================
-  // FILTER LOGIC
-  // ===============================
-
-  applyFilters() {
-    let data = [...this.items];
-
-    // Search
-    if (this.searchTerm) {
-      data = data.filter(item =>
-        item.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
-    }
-
-    // Category
-    if (this.selectedCategory) {
-      data = data.filter(item =>
-        item.category?.name === this.selectedCategory
-      );
-    }
-
-    // Sorting
-    // if (this.sortOption === 'priceAsc') {
-    //   data.sort((a, b) => a.price - b.price);
-    // }
-
-    // if (this.sortOption === 'priceDesc') {
-    //   data.sort((a, b) => b.price - a.price);
-    // }
-
-    this.filteredItems = data;
+  loadCategories(){
+    this.categoryService.getCategories().pipe().subscribe({
+      next: (cats) => {
+        this.categories = cats;
+      }
+    });
   }
 
-  extractCategories() {
-    const unique = new Set(
-      this.items
-        .map(i => i.category?.name)
-        .filter(Boolean)
-    );
-
-    this.categories = Array.from(unique) as string[];
-  }
+  
 
   // ===============================
   // CART

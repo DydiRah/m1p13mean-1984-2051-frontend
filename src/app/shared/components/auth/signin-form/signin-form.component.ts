@@ -75,7 +75,7 @@ export class SigninFormComponent {
                 } else if (user.role === 'store'){
                   this.router.navigateByUrl("/dashboard");
                 } else {
-                  this.router.navigateByUrl("/dashboard");
+                  this.router.navigateByUrl("/welcome");
                 }
               },
               error: (err) => this.error = "Impossible de récupérer l'utilisateur."

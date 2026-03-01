@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { User } from './user.service';
 import { environment } from '../../../environments/environment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 
 // notification.model.ts
@@ -17,6 +18,38 @@ export interface Notification {
 export class NotificationService {
     private readonly notifUrl = `${environment.apiBaseUrl}/notifications`;
     private eventSource!: EventSource;
+
+    constructor(private http: HttpClient) {}
+
+    private getHeaders(): HttpHeaders {
+        const token = localStorage.getItem('token');
+        let headers = new HttpHeaders();
+
+        if (token) {
+        headers = headers.set('Authorization', `Bearer ${token}`);
+        } else {
+        console.warn('Aucun token trouvé dans localStorage');
+        }
+
+        return headers;
+    }
+    
+    // Get all stock movements
+    getNotifications(): Observable<Notification[]> {
+        return this.http.get<{ success: boolean; notifications: Notification[] }>(
+            `${this.notifUrl}`, { headers: this.getHeaders() }
+        ).pipe(
+            map(response => response.notifications),
+        );
+    }
+
+    viewAll(): Observable<Notification[]> {
+        return this.http.put<{ success: boolean; notifications: Notification[] }>(
+            `${this.notifUrl}`, { headers: this.getHeaders() }
+        ).pipe(
+            map(response => response.notifications),
+        );
+    }
 
     connect(): Observable<any> {
         const token = localStorage.getItem('token');

@@ -1,0 +1,15 @@
+<div>
+    <div class="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">Welcome back!</h1>
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
+            You have placed <span class="font-semibold">{{ orderCount }}</span> order{{ orderCount !== 1 ? 's' : '' }} so far.
+        </p>
+        
+        <button
+        (click)="goToItems()"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition-colors"
+        >
+            Explore Items
+        </button>
+    </div>
+</div>
