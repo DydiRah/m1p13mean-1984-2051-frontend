@@ -97,8 +97,7 @@ export class UserMetaCardComponent {
     {
       this.userService.updateUser(this.user._id, this.userFormData, this.selectedFile).subscribe({
         next: (updatedUser) => {
-          console.log('User updated', updatedUser);
-          this.user = updatedUser;
+          this.user = { ...updatedUser };
           this.closeModal();
         },
         error: (err) => console.error('Error updating user', err)

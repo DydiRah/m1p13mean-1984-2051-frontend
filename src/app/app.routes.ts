@@ -9,6 +9,7 @@ import { SignUpComponent } from "./pages/auth-pages/sign-up/sign-up.component";
 import { BoxesComponent } from "./pages/boxes/boxes.component";
 import { StoresComponent } from "./pages/stores/stores.component";
 import { StockesComponent } from "./pages/stockes/stockes.component";
+import { LandingPageComponent } from "./pages/landing-page/landing-page.component";
 import { ItemsComponent } from "./pages/items/items.component";
 import { ItemsBuyerComponent } from "./pages/items-buyer/items-buyer.component";
 import { OrdersComponent } from "./pages/orders/orders.component";
@@ -16,6 +17,12 @@ import { ContractComponent } from "./pages/contract/contract.component";
 import { roleGuard } from "./guards/role.guard";
 
 export const routes: Routes = [
+  {
+    path: "",
+    component: LandingPageComponent,
+    pathMatch: "full",
+    title: "Vendeo"
+  },
   {
     path: "",
     component: AppLayoutComponent,
@@ -27,7 +34,7 @@ export const routes: Routes = [
         pathMatch: "full",
         title:
           "Dashboard - Vendeo",
-        data: { roles: ['admin', 'store'] }
+        data: { roles: ['admin', 'store', 'buyer'] }
       },
       {
         path: "stores",
@@ -81,7 +88,7 @@ export const routes: Routes = [
         path: "profile",
         component: ProfileComponent,
         title:
-          "Angular Profile Dashboard | TailAdmin - Angular Admin Dashboard Template",
+          "Profile - Vendeo",
         data: { roles: ['buyer', 'admin', 'store'] }
       },
       {
@@ -97,19 +104,19 @@ export const routes: Routes = [
     path: "signin",
     component: SignInComponent,
     title:
-      "Angular Sign In Dashboard | TailAdmin - Angular Admin Dashboard Template",
+      "Login - Vendeo",
   },
   {
     path: "signup",
     component: SignUpComponent,
     title:
-      "Angular Sign Up Dashboard | TailAdmin - Angular Admin Dashboard Template",
+      "Create account - Vendeo",
   },
   // error pages
   {
     path: "**",
     component: NotFoundComponent,
     title:
-      "Angular NotFound Dashboard | TailAdmin - Angular Admin Dashboard Template",
+      "Not Found - Vendeo",
   },
 ];

@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { LabelComponent } from "../../form/label/label.component";
-import { CheckboxComponent } from "../../form/input/checkbox.component";
 import { ButtonComponent } from "../../ui/button/button.component";
 import { InputFieldComponent } from "../../form/input/input-field.component";
 import { Router, RouterModule } from "@angular/router";
@@ -19,7 +18,6 @@ import { UserService } from "../../../services/user.service";
   imports: [
     CommonModule,
     LabelComponent,
-    CheckboxComponent,
     ButtonComponent,
     InputFieldComponent,
     RouterModule,
@@ -70,8 +68,18 @@ export class SigninFormComponent {
           const token = res && (res.token as string | undefined);
           if (token) {
             localStorage.setItem("token", token);
-            this.userService.loadCurrentUser();
-            this.router.navigateByUrl("/");
+            this.userService.loadCurrentUser().subscribe({
+              next: (user) => {
+                if (user.role === 'admin'){
+                  this.router.navigateByUrl("/dashboard");
+                } else if (user.role === 'store'){
+                  this.router.navigateByUrl("/dashboard");
+                } else {
+                  this.router.navigateByUrl("/dashboard");
+                }
+              },
+              error: (err) => this.error = "Impossible de récupérer l'utilisateur."
+            });
           } else {
             this.error =
               res.message || "Login successful but no token returned.";

@@ -1,27 +1,30 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { UserService } from '../shared/services/user.service';
-import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-export const roleGuard: CanActivateFn = (route, state): Observable<boolean> => {
+import { first, map } from 'rxjs/operators';
+
+export const roleGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const userService = inject(UserService);
   const allowedRoles = route.data['roles'] as string[];
 
-  return userService.currentUser$.pipe(
+  // Ici on attend la première valeur du currentUser$
+  return userService.loadCurrentUser().pipe(
+    first(), // on ne prend qu'une seule émission
     map(user => {
-      if (!user || !user.role) {
-        // router.navigate(['/signin']); // redirige si pas de user ou rôle
-        return true;
+      if (!user) {
+        router.navigate(['/signin']);
+        return false;
       }
 
-      if (allowedRoles.includes(user.role)) {
-        return true; // accès autorisé
+      if (!allowedRoles.includes(user.role!)) {
+        router.navigate(['/unauthorized']);
+        return false;
       }
 
-      router.navigate(['/unauthorized']); // rôle non autorisé
-      return false;
+      return true; // tout est ok
     })
   );
 };

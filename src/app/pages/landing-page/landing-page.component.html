@@ -1,0 +1,122 @@
+<!-- Landing Page - VENDEO -->
+<!-- Header is already handled in layout -->
+
+<section class="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white transition-colors duration-300">
+
+  <!-- Hero Section -->
+  <div class="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
+    
+    <!-- Left Content -->
+    <div>
+      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
+        Manage Places.
+        <span class="text-blue-600 dark:text-blue-400">Power Shops.</span>
+        Grow Smarter.
+      </h1>
+
+      <p class="mt-6 text-lg text-gray-600 dark:text-gray-300">
+        VENDEO helps you manage shopping centers, stores, and business locations
+        in one powerful and simple platform.
+      </p>
+
+      <div class="mt-8 flex gap-4">
+        <a
+          routerLink="/signup"
+          class="px-8 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-lg hover:shadow-xl transition duration-300">
+          Use VENDEO
+        </a>
+
+        <a
+          href="#features"
+          class="px-8 py-3 rounded-2xl border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition duration-300">
+          Learn More
+        </a>
+      </div>
+    </div>
+
+    <!-- Right Image -->
+    <div class="relative">
+      <img
+        src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df"
+        alt="Business dashboard"
+        class="rounded-3xl shadow-2xl w-full object-cover" />
+
+      <div class="absolute -bottom-6 -left-6 bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-xl">
+        <p class="text-sm text-gray-500 dark:text-gray-400">Active Locations</p>
+        <p class="text-2xl font-bold">128</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <section id="features" class="bg-gray-50 dark:bg-gray-900 py-20">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold">
+        Everything You Need to Manage Your Business
+      </h2>
+
+      <p class="mt-4 text-gray-600 dark:text-gray-400">
+        Simple tools designed for modern shopping center and store management.
+      </p>
+
+      <div class="mt-16 grid md:grid-cols-3 gap-8">
+        
+        <!-- Feature 1 -->
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-xl transition duration-300">
+          <div class="text-blue-600 dark:text-blue-400 text-4xl">🏬</div>
+          <h3 class="mt-4 text-xl font-semibold">Location Management</h3>
+          <p class="mt-2 text-gray-600 dark:text-gray-400">
+            Manage multiple shopping centers and locations from one dashboard.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-xl transition duration-300">
+          <div class="text-blue-600 dark:text-blue-400 text-4xl">🛒</div>
+          <h3 class="mt-4 text-xl font-semibold">Shop Control</h3>
+          <p class="mt-2 text-gray-600 dark:text-gray-400">
+            Monitor store performance, contracts, and activity easily.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-xl transition duration-300">
+          <div class="text-blue-600 dark:text-blue-400 text-4xl">📊</div>
+          <h3 class="mt-4 text-xl font-semibold">Smart Insights</h3>
+          <p class="mt-2 text-gray-600 dark:text-gray-400">
+            Get clear analytics and reports to make better decisions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20">
+    <div class="max-w-4xl mx-auto text-center px-6">
+      <h2 class="text-3xl md:text-4xl font-bold">
+        Ready to Take Full Control of Your Locations?
+      </h2>
+
+      <p class="mt-4 text-gray-600 dark:text-gray-400">
+        Join businesses that trust VENDEO to manage their spaces efficiently.
+      </p>
+
+      <div class="mt-8">
+        <a
+          routerLink="/signup"
+          class="px-10 py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-xl hover:shadow-2xl transition duration-300">
+          Get Started Now
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 dark:bg-gray-900 py-8">
+    <div class="max-w-7xl mx-auto px-6 text-center text-gray-600 dark:text-gray-400">
+      © {{ currentYear }} VENDEO. All rights reserved.
+    </div>
+  </footer>
+
+</section>

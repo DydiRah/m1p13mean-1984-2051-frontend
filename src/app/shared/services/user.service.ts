@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Item } from './items.service';
 import { Store } from './stores.service';
@@ -16,6 +16,7 @@ export interface User {
   phone?: string;
   adress?: string;
   createdAt?: Date;
+  notification?: any[]
 }
 
 @Injectable({
@@ -28,7 +29,12 @@ export class UserService {
     currentUser$ = this.currentUserSubject.asObservable();
 
     constructor(private http: HttpClient) {
-        this.loadCurrentUser();
+        const token = localStorage.getItem('token');
+        if (token) {
+            this.loadCurrentUser().subscribe({
+                error: () => this.logout() // si token invalide
+            });
+        }
     }
 
     private getHeaders(): HttpHeaders {
@@ -44,16 +50,17 @@ export class UserService {
         return headers;
     }
 
-    loadCurrentUser(): void {
-        this.getCurrentUser().subscribe({
-            next: (user) => {
+    loadCurrentUser(): Observable<User> {
+        return this.getCurrentUser().pipe(
+            map(user => {
                 this.currentUserSubject.next(user);
-            },
-            error: (err) => {
-            console.warn('Impossible de charger l’utilisateur actuel:', err);
+                return user;   
+            }),
+            catchError(err => {
             this.currentUserSubject.next(null);
-            }
-        });
+            return throwError(() => err);
+            })
+        );
     }
 
     getCurrentUser(): Observable<User> {
@@ -78,18 +85,27 @@ export class UserService {
 
     updateUser(id: string, user: User, photo?: File): Observable<User> {
         const form = new FormData();
-        if (user.email) form.append('name', user.email);
-        if (user.last_name) form.append('name', user.last_name);
-        if (user.first_name) form.append('name', user.first_name);
-        if (user.phone) form.append('name', user.phone);
-        if (user.adress) form.append('name', user.adress);
+        if (user.email) form.append('email', user.email);
+        if (user.last_name) form.append('last_name', user.last_name);
+        if (user.first_name) form.append('first_name', user.first_name);
+        if (user.phone) form.append('phone', user.phone);
+        if (user.adress) form.append('adress', user.adress);
 
         if (photo) {
             form.append('pdp', photo, photo.name);
         }
-        return this.http.put<Item>(`${this.userUrl}/${id}`, form, {
+        console.log(id);
+        
+        return this.http.put<User>(`${this.userUrl}/${id}`, form, {
                 headers: this.getHeaders()
             }).pipe(
+            tap(() => {
+                this.loadCurrentUser().subscribe({
+                    error: (err) => {
+                    console.error('Erreur lors du chargement de l’utilisateur', err);
+                    }
+                });
+            }),
             catchError((error) => {
                 try {
                     console.error('Response body (stringified):', JSON.stringify(error.error));

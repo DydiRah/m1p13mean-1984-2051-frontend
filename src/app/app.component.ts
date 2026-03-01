@@ -12,12 +12,7 @@ import { UserService } from './shared/services/user.service';
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title = 'Angular Ecommerce Dashboard | TailAdmin';
+  title = 'Vendeo';
   constructor(private userService: UserService) {}
 
-  ngOnInit() {
-    if (localStorage.getItem('token')) {
-      this.userService.getCurrentUser();
-    }
-  }
 }
